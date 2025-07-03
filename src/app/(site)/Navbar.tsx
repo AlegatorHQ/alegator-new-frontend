@@ -26,19 +26,38 @@ export default function Navbar() {
         </Link>
 
         <div className="flex-1 flex justify-end items-center gap-12">
-          <Link href="/dashboard" className="text-white font-bold text-lg hidden md:block">
+          <Link
+            href="/dashboard"
+            className="text-white font-bold text-lg hidden md:block"
+          >
             INICIO
           </Link>
-          <Link href="/my-tournaments" className="text-white font-bold text-lg hidden md:block">
+          <Link
+            href="/my-tournaments"
+            className="text-white font-bold text-lg hidden md:block"
+          >
             MIS TORNEOS
           </Link>
-          <Link href="/events" className="text-white font-bold text-lg hidden md:block">
+          <Link
+            href="/events"
+            className="text-white font-bold text-lg hidden md:block"
+          >
             EVENTOS
           </Link>
-          <Link href="/profile" className="text-white text-2xl ml-4 hidden md:block">
-            <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <circle cx="12" cy="8" r="4"/>
-              <path d="M4 20c0-4 8-4 8-4s8 0 8 4"/>
+          <Link
+            href="/profile"
+            className="text-white text-2xl ml-4 hidden md:block"
+          >
+            <svg
+              width="28"
+              height="28"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 8-4 8-4s8 0 8 4" />
             </svg>
           </Link>
         </div>
@@ -50,7 +69,14 @@ export default function Navbar() {
             aria-label="Abrir menú"
           >
             {/* Menú hamburguesa */}
-            <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <svg
+              width="32"
+              height="32"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
               <path d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
@@ -70,10 +96,20 @@ export default function Navbar() {
             <Link href="/eventos" className="text-white font-bold text-lg">
               EVENTOS
             </Link>
-            <Link href="/perfil" className="text-white text-2xl flex items-center gap-2">
-              <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4"/>
-                <path d="M4 20c0-4 8-4 8-4s8 0 8 4"/>
+            <Link
+              href="/perfil"
+              className="text-white text-2xl flex items-center gap-2"
+            >
+              <svg
+                width="28"
+                height="28"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 8-4 8-4s8 0 8 4" />
               </svg>
               Perfil
             </Link>

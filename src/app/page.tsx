@@ -6,8 +6,6 @@ import Navbar from "@/app/(site)/Navbar";
 import { LoginForm } from "@/components/LoginForm/LoginForm";
 import { ResetPassword } from "@/components/ResetPassword/ResetPassword";
 
-
-
 export default function Home() {
   const searchParams = useSearchParams();
   const code = searchParams.get("code");

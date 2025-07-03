@@ -58,7 +58,13 @@ export function ResetPassword({ code }: { code: string }) {
       />
       <div className="relative bg-[#133c2b] rounded-3xl shadow-2xl px-4 py-8 sm:px-8 sm:py-12 flex flex-col items-center w-full max-w-[95vw] sm:max-w-lg md:max-w-xl z-20">
         <div className="absolute -top-28 left-1/2 -translate-x-1/2 flex justify-center items-center">
-          <Image src={ivanNoTextSVG} alt="Caimán" width={150} height={150} priority />
+          <Image
+            src={ivanNoTextSVG}
+            alt="Caimán"
+            width={150}
+            height={150}
+            priority
+          />
         </div>
         <h2 className="mt-20 mb-10 text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center tracking-wide">
           NUEVA CONTRASEÑA
@@ -80,7 +86,9 @@ export function ResetPassword({ code }: { code: string }) {
             {loading ? "Guardando..." : "Guardar nueva contraseña"}
           </FormButton>
           {message && (
-            <div className="text-center text-yellow-300 font-semibold">{message}</div>
+            <div className="text-center text-yellow-300 font-semibold">
+              {message}
+            </div>
           )}
         </form>
       </div>

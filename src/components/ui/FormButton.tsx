@@ -1,10 +1,15 @@
 import React from "react";
 
-interface FormButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface FormButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-export function FormButton({ children, className = "", ...props }: FormButtonProps) {
+export function FormButton({
+  children,
+  className = "",
+  ...props
+}: FormButtonProps) {
   return (
     <button
       type="submit"
