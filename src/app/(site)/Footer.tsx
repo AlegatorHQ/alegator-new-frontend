@@ -46,10 +46,18 @@ export default function Footer({ showIvan = false }: FooterProps) {
           <div className="flex flex-col items-center">
             <div className="w-full max-w-xs ml-32">
               <h3 className="text-xl font-bold mb-2">CONTÁCTANOS</h3>
-              <p className="text-base">Teléfono:<br />777-7777</p>
+              <p className="text-base">
+                Teléfono:
+                <br />
+                777-7777
+              </p>
               <p className="text-base mt-1">
-                Correo:<br />
-                <a href="mailto:info@alegator.app" className="underline hover:text-[#b0e57c]">
+                Correo:
+                <br />
+                <a
+                  href="mailto:info@alegator.app"
+                  className="underline hover:text-[#b0e57c]"
+                >
                   info@alegator.app
                 </a>
               </p>
@@ -57,9 +65,16 @@ export default function Footer({ showIvan = false }: FooterProps) {
           </div>
           <div className="flex flex-col items-end">
             <div className="w-full max-w-xs text-justify">
-              <h3 className="text-xl font-bold mb-2 text-right mr-3">SÍGUENOS</h3>
+              <h3 className="text-xl font-bold mb-2 text-right mr-3">
+                SÍGUENOS
+              </h3>
               <div className="flex items-center gap-8 mt-1 justify-end">
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                >
                   <Image
                     src="/instagram.png"
                     alt="Instagram"
@@ -68,7 +83,12 @@ export default function Footer({ showIvan = false }: FooterProps) {
                     style={{ minWidth: 20, minHeight: 20 }}
                   />
                 </a>
-                <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X">
+                <a
+                  href="https://x.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="X"
+                >
                   <Image
                     src="/twitter.png"
                     alt="X"
@@ -77,7 +97,12 @@ export default function Footer({ showIvan = false }: FooterProps) {
                     style={{ minWidth: 20, minHeight: 20 }}
                   />
                 </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                >
                   <Image
                     src="/facebook.png"
                     alt="Facebook"
