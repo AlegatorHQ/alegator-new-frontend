@@ -70,7 +70,7 @@ export function LoginForm() {
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-[#c3d1b2]">
       <div style={{ height: 80 }} />
       {/* Formulario */}
-      <div className="relative bg-[#133c2b] rounded-3xl shadow-2xl top-8 px-4 py-6 sm:px-6 sm:py-8 flex flex-col items-center w-full max-w-[95vw] sm:max-w-lg md:max-w-xl z-20">
+      <div className="relative bg-[#133c2b] rounded-3xl shadow-2xl top-8 px-2 sm:px-6 py-5 sm:py-8 flex flex-col items-center w-full max-w-md z-20">
         {/* Iván el caimán */}
         <div className="absolute -top-24 left-1/2 -translate-x-1/2 flex justify-center items-center">
           <Image
@@ -111,8 +111,8 @@ export function LoginForm() {
                   <Image
                     src={PasswordIcon}
                     alt="Password Icon"
-                    width={36}
-                    height={36}
+                    width={32}
+                    height={32}
                   />
                 </span>
                 <Input
@@ -143,7 +143,7 @@ export function LoginForm() {
                   />
                 </button>
               </div>
-              <FormButton className="bg-[#8ca62e] hover:bg-[#7fa650] text-white text-2xl sm:text-3xl font-bold py-5 sm:py-6 rounded-full shadow-none">
+              <FormButton className="w-full bg-[#8ca62e] hover:bg-[#7fa650] text-white text-2xl sm:text-3xl font-bold py-5 sm:py-6 rounded-full shadow-none">
                 INGRESAR
               </FormButton>
             </form>
@@ -180,7 +180,7 @@ export function LoginForm() {
               />
             </div>
             <FormButton
-              className="bg-[#8ca62e] hover:bg-[#7fa650] text-white text-2xl sm:text-3xl font-bold py-5 sm:py-6 rounded-full shadow-none"
+              className="w-full bg-[#8ca62e] hover:bg-[#7fa650] text-white text-2xl sm:text-3xl font-bold py-5 sm:py-6 rounded-full shadow-none"
               disabled={loading}
             >
               {loading ? "Enviando..." : "Enviar enlace de reseteo"}

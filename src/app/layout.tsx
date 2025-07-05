@@ -11,7 +11,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "ShipFree",
+  title: "Alegator",
   description:
     "Open Source Alternative to ShipFast - Launch your startup in days Not in weeks",
   keywords: [
