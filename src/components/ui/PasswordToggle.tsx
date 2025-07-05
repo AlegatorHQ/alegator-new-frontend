@@ -9,7 +9,11 @@ interface PasswordToggleProps {
   className?: string;
 }
 
-export function PasswordToggle({ show, setShow, className }: PasswordToggleProps) {
+export function PasswordToggle({
+  show,
+  setShow,
+  className,
+}: PasswordToggleProps) {
   return (
     <button
       type="button"
@@ -25,5 +29,5 @@ export function PasswordToggle({ show, setShow, className }: PasswordToggleProps
         height={32}
       />
     </button>
-    );
-  }
+  );
+}

@@ -38,7 +38,9 @@ export default async function Register() {
               width={320}
               height={240}
               className="object-contain"
-              style={{ transform: "rotate(180deg) translateY(-32px) translateX(-4px)" }}
+              style={{
+                transform: "rotate(180deg) translateY(-32px) translateX(-4px)",
+              }}
               priority
             />
           </div>
@@ -65,7 +67,9 @@ export default async function Register() {
               width={320}
               height={240}
               className="object-contain"
-              style={{ transform: "rotate(0deg) translateY(3px) translateX(-8px)" }}
+              style={{
+                transform: "rotate(0deg) translateY(3px) translateX(-8px)",
+              }}
               priority
             />
           </div>

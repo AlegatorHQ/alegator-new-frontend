@@ -51,15 +51,19 @@ export function RegisterForm() {
     if (error) {
       setRegisterMessage("Error al registrarse: " + error.message);
     } else {
-      setRegisterMessage("¡Registro exitoso! Revisa tu correo para confirmar tu cuenta.");
+      setRegisterMessage(
+        "¡Registro exitoso! Revisa tu correo para confirmar tu cuenta."
+      );
     }
     setLoading(false);
   };
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen px-1 py-4 sm:px-2 bg-transparent">
-      <div className="relative rounded-3xl px-2 sm:px-4 md:px-6 py-6 md:py-8 flex flex-col items-center w-full
-        max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl">
+      <div
+        className="relative rounded-3xl px-2 sm:px-4 md:px-6 py-6 md:py-8 flex flex-col items-center w-full
+        max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl"
+      >
         <form
           onSubmit={handleRegister}
           className="w-full flex flex-col gap-6 lg:gap-8"
@@ -72,7 +76,13 @@ export function RegisterForm() {
             <div className="flex flex-col lg:flex-row gap-3 lg:gap-6">
               <div className="relative flex-1">
                 <span className="absolute left-3 lg:left-4 top-1/2 -translate-y-1/2">
-                  <Image src={UserInformationIcon} alt="Nombre" width={24} height={24} className="w-5 h-5 lg:w-7 lg:h-7" />
+                  <Image
+                    src={UserInformationIcon}
+                    alt="Nombre"
+                    width={24}
+                    height={24}
+                    className="w-5 h-5 lg:w-7 lg:h-7"
+                  />
                 </span>
                 <Input
                   id="nombre"
@@ -86,7 +96,13 @@ export function RegisterForm() {
               </div>
               <div className="relative flex-1">
                 <span className="absolute left-3 lg:left-4 top-1/2 -translate-y-1/2">
-                  <Image src={UserInformationIcon} alt="Apellido" width={24} height={24} className="w-5 h-5 lg:w-7 lg:h-7" />
+                  <Image
+                    src={UserInformationIcon}
+                    alt="Apellido"
+                    width={24}
+                    height={24}
+                    className="w-5 h-5 lg:w-7 lg:h-7"
+                  />
                 </span>
                 <Input
                   id="apellido"
@@ -109,7 +125,13 @@ export function RegisterForm() {
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 lg:left-4 top-1/2 -translate-y-1/2">
-                    <Image src={UserIcon} alt="Usuario" width={24} height={24} className="w-5 h-5 lg:w-7 lg:h-7" />
+                    <Image
+                      src={UserIcon}
+                      alt="Usuario"
+                      width={24}
+                      height={24}
+                      className="w-5 h-5 lg:w-7 lg:h-7"
+                    />
                   </span>
                   <Input
                     id="username"
@@ -128,7 +150,13 @@ export function RegisterForm() {
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 lg:left-4 top-1/2 -translate-y-1/2">
-                    <Image src={EmailIcon} alt="Correo" width={24} height={24} className="w-5 h-5 lg:w-7 lg:h-7" />
+                    <Image
+                      src={EmailIcon}
+                      alt="Correo"
+                      width={24}
+                      height={24}
+                      className="w-5 h-5 lg:w-7 lg:h-7"
+                    />
                   </span>
                   <Input
                     id="correo"
@@ -152,7 +180,13 @@ export function RegisterForm() {
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 lg:left-4 top-1/2 -translate-y-1/2">
-                    <Image src={PasswordIcon} alt="Contraseña" width={20} height={20} className="w-5 h-5 lg:w-6 lg:h-6" />
+                    <Image
+                      src={PasswordIcon}
+                      alt="Contraseña"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 lg:w-6 lg:h-6"
+                    />
                   </span>
                   <Input
                     id="password"
@@ -176,7 +210,13 @@ export function RegisterForm() {
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 lg:left-4 top-1/2 -translate-y-1/2">
-                    <Image src={RepeatIcon} alt="Repetir contraseña" width={20} height={20} className="w-5 h-5 lg:w-6 lg:h-6" />
+                    <Image
+                      src={RepeatIcon}
+                      alt="Repetir contraseña"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 lg:w-6 lg:h-6"
+                    />
                   </span>
                   <Input
                     id="confirmar-password"

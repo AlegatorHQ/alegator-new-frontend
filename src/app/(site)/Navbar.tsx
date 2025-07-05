@@ -16,9 +16,11 @@ export default function Navbar() {
       setIsLoggedIn(!!session);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(!!session);
-    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setIsLoggedIn(!!session);
+      }
+    );
 
     return () => {
       listener.subscription.unsubscribe();
@@ -118,7 +120,10 @@ export default function Navbar() {
             <Link href="/dashboard" className="text-white font-bold text-lg">
               INICIO
             </Link>
-            <Link href="/my-tournaments" className="text-white font-bold text-lg">
+            <Link
+              href="/my-tournaments"
+              className="text-white font-bold text-lg"
+            >
               MIS TORNEOS
             </Link>
             <Link href="/events" className="text-white font-bold text-lg">
