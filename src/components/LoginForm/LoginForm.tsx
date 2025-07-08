@@ -129,14 +129,22 @@ export function LoginForm() {
                     />
                     <button
                       type="button"
-                      aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                      aria-label={
+                        showPassword
+                          ? "Ocultar contraseña"
+                          : "Mostrar contraseña"
+                      }
                       onClick={() => setShowPassword((v) => !v)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-[#133c2b] focus:outline-none"
                       tabIndex={0}
                     >
                       <Image
                         src={showPassword ? EyeOffIcon : EyeIcon}
-                        alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                        alt={
+                          showPassword
+                            ? "Ocultar contraseña"
+                            : "Mostrar contraseña"
+                        }
                         width={24}
                         height={24}
                         className="w-6 h-6"
@@ -161,7 +169,12 @@ export function LoginForm() {
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2">
-                    <Image src={UserIcon} alt="User Icon" width={22} height={22} />
+                    <Image
+                      src={UserIcon}
+                      alt="User Icon"
+                      width={22}
+                      height={22}
+                    />
                   </span>
                   <Input
                     id="reset-email"
