@@ -40,14 +40,14 @@ export default function Navbar() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-8">
         <Link
           href="/"
-          className="flex items-center h-14 md:h-20 min-w-[56px] md:min-w-[120px]"
+          className="flex items-center h-20 min-w-[80px]"
         >
           <Image
             src={AlegatorLogo}
             alt="Alegator"
             width={80}
             height={80}
-            className="h-14 w-auto md:h-20"
+            className="h-20 w-auto"
             priority
           />
         </Link>
