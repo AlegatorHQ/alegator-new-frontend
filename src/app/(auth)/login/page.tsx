@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { LoginForm } from "@/components/LoginForm/LoginForm";
 import Navbar from "@/app/(site)/Navbar";
 import Link from "next/link";
@@ -16,9 +17,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Login() {
-  const supabase = createClient();
+  "use server";
+  const supabase = await createClient();
+
   const {
-    data: { session },
+    data: { session }, error
   } = await supabase.auth.getSession();
 
   if (session) {

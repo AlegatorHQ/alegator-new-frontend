@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
 import Navbar from "@/app/(site)/Navbar";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 
@@ -10,13 +11,14 @@ export const metadata: Metadata = {
   title: "Register",
   description: "Create a new account",
   openGraph: {
-    title: "Register | My App",
-    description: "Create a new account on My App",
+    title: "Register | Alegator",
+    description: "Create a new account on Alegator",
   },
 };
 
 export default async function Register() {
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
   const {
     data: { session },
   } = await supabase.auth.getSession();

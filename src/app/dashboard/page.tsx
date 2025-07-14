@@ -1,4 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server"
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
@@ -7,26 +8,35 @@ export const metadata: Metadata = {
   title: "Dashboard",
   description: "Your personal dashboard",
   openGraph: {
-    title: "Dashboard | My App",
-    description: "Access your personal dashboard on My App",
+    title: "Dashboard | Alegator",
+    description: "Access your personal dashboard on Alegator",
   },
 };
 
 export default async function Dashboard() {
-  const supabase = createClient();
+  "use server";
+  const supabase = await createClient();
+
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (!user || error) {
     redirect("/login");
   }
 
   const handleSignOut = async () => {
     "use server";
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    redirect("/login");
+    const supabase = await createClient();
+    
+    const { error } = await supabase.auth.signOut();
+
+    if (!error) {
+      redirect("/login");
+    } else {
+      console.log(error);
+    }
   };
 
   return (
@@ -35,7 +45,7 @@ export default async function Dashboard() {
         <h1 className="text-2xl font-bold text-center">Dashboard</h1>
         <p className="text-center">Welcome, {user.email}!</p>
         <form action={handleSignOut}>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" variant="destructive">
             Sign Out
           </Button>
         </form>

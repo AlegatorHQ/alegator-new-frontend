@@ -26,18 +26,27 @@ export function LoginForm() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      setResetMessage("Usuario o contraseña incorrectos.");
-    } else {
-      setResetMessage("");
-      router.push("/dashboard");
+    setLoading(true);
+    setResetMessage("");
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) {
+        setResetMessage("Usuario o contraseña incorrectos.");
+      } else {
+        window.location.href = "/dashboard";
+      }
+    } catch(error) {
+      setResetMessage("Error al iniciar sesión");
+    } finally {
+      setLoading(false)
     }
   };
-
+  
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setResetMessage("");
@@ -237,3 +246,4 @@ export function LoginForm() {
     </div>
   );
 }
+
