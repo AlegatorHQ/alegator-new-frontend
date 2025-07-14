@@ -38,10 +38,7 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 z-50 w-full bg-[#11372A] font-montserrat">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-8">
-        <Link
-          href="/"
-          className="flex items-center h-20 min-w-[80px]"
-        >
+        <Link href="/" className="flex items-center h-20 min-w-[80px]">
           <Image
             src={AlegatorLogo}
             alt="Alegator"
