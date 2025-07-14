@@ -38,7 +38,7 @@ export function LoginForm() {
       if (error) {
         setResetMessage("Usuario o contraseña incorrectos.");
       } else {
-        window.location.href = "/dashboard";
+        router.push("/");
       }
     } catch (error) {
       setResetMessage("Error al iniciar sesión");

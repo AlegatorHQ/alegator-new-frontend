@@ -47,13 +47,13 @@ export default function Navbar() {
         {/* Menú desktop */}
         <div className="flex-1 flex justify-end items-center gap-12">
           <Link
-            href="/dashboard"
+            href="/"
             className="text-white font-bold text-lg hidden md:block"
           >
             INICIO
           </Link>
           <Link
-            href="/my-tournaments"
+            href="/tournaments"
             className="text-white font-bold text-lg hidden md:block"
           >
             MIS TORNEOS
@@ -117,7 +117,7 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden bg-[#154134] border-t border-[#1e5943] px-6 py-4">
           <nav className="flex flex-col items-center gap-4">
-            <Link href="/dashboard" className="text-white font-bold text-lg">
+            <Link href="/" className="text-white font-bold text-lg">
               INICIO
             </Link>
             <Link

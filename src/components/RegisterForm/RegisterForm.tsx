@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { FormButton } from "@/components/ui/FormButton";
 import Image from "next/image";
@@ -24,6 +25,7 @@ export function RegisterForm() {
   const [registerMessage, setRegisterMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,9 +53,20 @@ export function RegisterForm() {
     if (error) {
       setRegisterMessage("Error al registrarse: " + error.message);
     } else {
-      setRegisterMessage(
-        "¡Registro exitoso! Revisa tu correo para confirmar tu cuenta."
-      );
+      // Guarda los props en sessionStorage
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(
+          "successfulProps",
+          JSON.stringify({
+            mainMessage: "¡REGISTRO EXITOSO!",
+            buttonText: "VOLVER AL INICIO",
+            buttonHref: "/",
+            secondaryMessage: "Revisa tu correo para confirmar tu cuenta.",
+            name: `${nombre} ${apellido}`,
+          })
+        );
+      }
+      router.push("/successful");
     }
     setLoading(false);
   };
