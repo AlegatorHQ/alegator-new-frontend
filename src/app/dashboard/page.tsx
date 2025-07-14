@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ export default async function Dashboard() {
   const handleSignOut = async () => {
     "use server";
     const supabase = await createClient();
-    
+
     const { error } = await supabase.auth.signOut();
 
     if (!error) {

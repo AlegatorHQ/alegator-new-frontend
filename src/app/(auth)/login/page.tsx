@@ -21,7 +21,8 @@ export default async function Login() {
   const supabase = await createClient();
 
   const {
-    data: { session }, error
+    data: { session },
+    error,
   } = await supabase.auth.getSession();
 
   if (session) {

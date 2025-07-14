@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
 import Navbar from "@/app/(site)/Navbar";
 import Link from "next/link";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 
@@ -17,8 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Register() {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+  const supabase = await createClient();
   const {
     data: { session },
   } = await supabase.auth.getSession();

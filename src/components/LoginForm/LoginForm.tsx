@@ -34,19 +34,19 @@ export function LoginForm() {
         email,
         password,
       });
-      
+
       if (error) {
         setResetMessage("Usuario o contraseña incorrectos.");
       } else {
         window.location.href = "/dashboard";
       }
-    } catch(error) {
+    } catch (error) {
       setResetMessage("Error al iniciar sesión");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
-  
+
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setResetMessage("");
@@ -246,4 +246,3 @@ export function LoginForm() {
     </div>
   );
 }
-
