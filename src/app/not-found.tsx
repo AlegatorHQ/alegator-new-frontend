@@ -15,10 +15,15 @@ export default function ErrorPage() {
             priority
           />
         </div>
-        <h1 className="text-4xl font-extrabold text-yellow-400 mb-4 font-montserrat">404</h1>
-        <h2 className="text-2xl font-extrabold text-white mb-4 font-montserrat">Página no encontrada :(</h2>
+        <h1 className="text-4xl font-extrabold text-yellow-400 mb-4 font-montserrat">
+          404
+        </h1>
+        <h2 className="text-2xl font-extrabold text-white mb-4 font-montserrat">
+          Página no encontrada :(
+        </h2>
         <p className="text-white mb-8 font-medium font-montserrat">
-          Lo sentimos, pero la página que estás buscando no existe. Puede que haya sido movida o eliminada.
+          Lo sentimos, pero la página que estás buscando no existe. Puede que
+          haya sido movida o eliminada.
         </p>
         <CheckoutButton
           href="/"

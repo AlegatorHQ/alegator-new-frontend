@@ -26,11 +26,7 @@ export default function CheckoutButton({
   };
 
   return (
-    <button
-      onClick={handleClick}
-      className={className}
-      type="button"
-    >
+    <button onClick={handleClick} className={className} type="button">
       {children}
     </button>
   );
