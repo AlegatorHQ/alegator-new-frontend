@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { RegisterForm } from "@/components/RegisterForm/RegisterForm";
 import Navbar from "@/app/(site)/Navbar";
 import Link from "next/link";
@@ -23,7 +22,7 @@ export default async function Register() {
   } = await supabase.auth.getSession();
 
   if (session) {
-    redirect("/dashboard");
+    redirect("/");
   }
 
   return (
