@@ -40,7 +40,7 @@ export function LoginForm() {
       } else {
         router.push("/");
       }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setResetMessage("Error al iniciar sesión");
     } finally {
