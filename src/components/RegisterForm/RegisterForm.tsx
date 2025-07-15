@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { FormButton } from "@/components/ui/FormButton";
 import Image from "next/image";
@@ -11,6 +12,7 @@ import UserInformationIcon from "@/assets/user-information.svg";
 import EmailIcon from "@/assets/email.svg";
 import RepeatIcon from "@/assets/repeat.png";
 import { PasswordToggle } from "@/components/ui/PasswordToggle";
+import Link from "next/link";
 
 export function RegisterForm() {
   const [nombre, setNombre] = useState("");
@@ -24,6 +26,7 @@ export function RegisterForm() {
   const [registerMessage, setRegisterMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,9 +54,20 @@ export function RegisterForm() {
     if (error) {
       setRegisterMessage("Error al registrarse: " + error.message);
     } else {
-      setRegisterMessage(
-        "¡Registro exitoso! Revisa tu correo para confirmar tu cuenta."
-      );
+      // Guarda los props en sessionStorage
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(
+          "successfulProps",
+          JSON.stringify({
+            mainMessage: "¡REGISTRO EXITOSO!",
+            buttonText: "VOLVER AL INICIO",
+            buttonHref: "/",
+            secondaryMessage: "Revisa tu correo para confirmar tu cuenta.",
+            name: `${nombre} ${apellido}`,
+          })
+        );
+      }
+      router.push("/successful");
     }
     setLoading(false);
   };
@@ -70,7 +84,10 @@ export function RegisterForm() {
         >
           {/* Nombre completo */}
           <div>
-            <label className="block text-white font-bold mb-2 lg:mb-3 text-sm sm:text-base lg:text-lg">
+            <label
+              htmlFor="nombre"
+              className="block text-white font-bold mb-2 lg:mb-3 text-sm sm:text-base lg:text-lg"
+            >
               NOMBRE COMPLETO
             </label>
             <div className="flex flex-col lg:flex-row gap-3 lg:gap-6">
@@ -247,12 +264,12 @@ export function RegisterForm() {
           <span className="text-white text-sm mb-2">
             ¿Ya tienes una cuenta?
           </span>
-          <a
+          <Link
             href="/login"
             className="w-full max-w-xs bg-[#8ca62e] hover:bg-[#7fa650] text-white text-base font-bold py-2 rounded-full text-center transition"
           >
             INICIAR SESIÓN
-          </a>
+          </Link>
         </div>
         {registerMessage && (
           <div className="text-center text-yellow-300 font-semibold mt-6 text-sm sm:text-base lg:text-lg">

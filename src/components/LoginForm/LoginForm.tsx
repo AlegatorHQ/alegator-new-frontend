@@ -26,15 +26,25 @@ export function LoginForm() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) {
-      setResetMessage("Usuario o contraseña incorrectos.");
-    } else {
-      setResetMessage("");
-      router.push("/dashboard");
+    setLoading(true);
+    setResetMessage("");
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setResetMessage("Usuario o contraseña incorrectos.");
+      } else {
+        router.push("/");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      setResetMessage("Error al iniciar sesión");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,12 +66,12 @@ export function LoginForm() {
       {/* Iván el caimán fuera del formulario, como agarrándolo */}
       <div className="relative w-full flex justify-center">
         {/* Ocultar Iván en mobile */}
-        <div className="absolute -top-8 z-20 justify-center w-full pointer-events-none select-none hidden md:flex">
+        <div className="absolute -top-12 z-20 justify-center w-full pointer-events-none select-none hidden md:flex">
           <Image
             src={ivanNoTextSVG}
             alt="Iván"
-            width={90}
-            height={90}
+            width={120}
+            height={120}
             className="drop-shadow-lg"
             priority
           />
@@ -70,7 +80,7 @@ export function LoginForm() {
         <div className="w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl">
           <div className="relative rounded-3xl px-4 sm:px-6 md:px-6 py-8 md:py-8 flex flex-col items-center w-full bg-[#133c2b] mt-10">
             <h2 className="text-white text-3xl font-bold text-center mb-10 mt-6 md:mt-8">
-              INICIO DE SESIÓN
+              {showReset ? "CAMBIAR CONTRASEÑA" : "INICIO DE SESIÓN"}
             </h2>
             {!showReset ? (
               <form
@@ -80,7 +90,7 @@ export function LoginForm() {
                 {/* Usuario */}
                 <div>
                   <label className="block text-white font-bold mb-3 text-base sm:text-lg">
-                    NOMBRE DE USUARIO O EMAIL
+                    CORREO ELECTRÓNICO
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2">
@@ -164,7 +174,7 @@ export function LoginForm() {
                 onSubmit={handleResetPassword}
                 className="w-full flex flex-col gap-6"
               >
-                <label className="block text-white font-bold mb-2 text-sm sm:text-base">
+                <label className="block text-white font-bold text-base sm:text-lg -mb-3">
                   CORREO ELECTRÓNICO
                 </label>
                 <div className="relative">
@@ -190,11 +200,11 @@ export function LoginForm() {
                   className="w-full bg-[#8ca62e] hover:bg-[#7fa650] text-white text-lg font-bold py-3 rounded-full shadow-none mt-2"
                   disabled={loading}
                 >
-                  {loading ? "Enviando..." : "Enviar enlace de reseteo"}
+                  {loading ? "Enviando..." : "Enviar enlace"}
                 </FormButton>
                 <button
                   type="button"
-                  className="block mx-auto text-white underline text-sm mt-4"
+                  className="text-white font-semibold underline text-sm"
                   onClick={() => {
                     setShowReset(false);
                     setResetMessage("");
@@ -204,16 +214,18 @@ export function LoginForm() {
                 </button>
               </form>
             )}
-            <button
-              type="button"
-              className="mt-4 text-[#ffe14d] font-semibold underline text-sm"
-              onClick={() => {
-                setShowReset(true);
-                setResetMessage("");
-              }}
-            >
-              ¿Olvidaste tu contraseña?
-            </button>
+            {!showReset && (
+              <button
+                type="button"
+                className="mt-4 text-[#ffe14d] font-semibold underline text-sm"
+                onClick={() => {
+                  setShowReset(true);
+                  setResetMessage("");
+                }}
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+            )}
             {resetMessage && (
               <div className="text-center text-yellow-300 font-semibold mt-4 text-sm">
                 {resetMessage}
@@ -227,6 +239,18 @@ export function LoginForm() {
               <Link
                 href="/register"
                 className="w-full max-w-xs bg-[#8ca62e] hover:bg-[#7fa650] text-white text-base font-bold py-2 rounded-full text-center transition"
+              >
+                REGISTRARSE
+              </Link>
+            </div>
+            {/* Texto de registro en desktop */}
+            <div className="hidden md:flex flex-col items-center mt-8 w-full">
+              <span className="text-white text-base font-montserrat">
+                ¿No tienes una cuenta? Regístrate Ahora
+              </span>
+              <Link
+                href="/register"
+                className="text-[#FFE682] font-extrabold text-xl font-montserrat hover:underline"
               >
                 REGISTRARSE
               </Link>

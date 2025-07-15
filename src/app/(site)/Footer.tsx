@@ -22,8 +22,9 @@ export default function Footer({ showIvan = false }: FooterProps) {
         </div>
       )}
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4">
-          <div>
+        <div className="flex flex-col lg:flex-row gap-8 mb-4">
+          {/* Enlaces rápidos */}
+          <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
             <h3 className="text-xl font-bold mb-2">ENLACES RÁPIDOS</h3>
             <ul className="space-y-1 text-base">
               <li>
@@ -43,8 +44,9 @@ export default function Footer({ showIvan = false }: FooterProps) {
               </li>
             </ul>
           </div>
-          <div className="flex flex-col items-center">
-            <div className="w-full max-w-xs ml-32">
+          {/* Contáctanos */}
+          <div className="flex-1 flex flex-col items-center">
+            <div className="w-full max-w-xs text-center">
               <h3 className="text-xl font-bold mb-2">CONTÁCTANOS</h3>
               <p className="text-base">
                 Teléfono:
@@ -63,12 +65,11 @@ export default function Footer({ showIvan = false }: FooterProps) {
               </p>
             </div>
           </div>
-          <div className="flex flex-col items-end">
-            <div className="w-full max-w-xs text-justify">
-              <h3 className="text-xl font-bold mb-2 text-right mr-3">
-                SÍGUENOS
-              </h3>
-              <div className="flex items-center gap-8 mt-1 justify-end">
+          {/* Síguenos */}
+          <div className="flex-1 flex flex-col items-center lg:items-end">
+            <div className="w-full max-w-xs text-center lg:text-right">
+              <h3 className="text-xl font-bold mb-2 lg:mr-3">SÍGUENOS</h3>
+              <div className="flex items-center gap-8 mt-1 justify-center lg:justify-end">
                 <a
                   href="https://instagram.com"
                   target="_blank"

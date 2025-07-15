@@ -10,19 +10,19 @@ export const metadata: Metadata = {
   title: "Register",
   description: "Create a new account",
   openGraph: {
-    title: "Register | My App",
-    description: "Create a new account on My App",
+    title: "Register | Alegator",
+    description: "Create a new account on Alegator",
   },
 };
 
 export default async function Register() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
   if (session) {
-    redirect("/dashboard");
+    redirect("/");
   }
 
   return (
