@@ -84,7 +84,10 @@ export function RegisterForm() {
         >
           {/* Nombre completo */}
           <div>
-            <label htmlFor="nombre" className="block text-white font-bold mb-2 lg:mb-3 text-sm sm:text-base lg:text-lg">
+            <label
+              htmlFor="nombre"
+              className="block text-white font-bold mb-2 lg:mb-3 text-sm sm:text-base lg:text-lg"
+            >
               NOMBRE COMPLETO
             </label>
             <div className="flex flex-col lg:flex-row gap-3 lg:gap-6">
