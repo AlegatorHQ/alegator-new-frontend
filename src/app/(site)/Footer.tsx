@@ -1,179 +1,124 @@
-export default function Footer() {
+import Image from "next/image";
+import Link from "next/link";
+import ivanNoTextSVG from "@/assets/alegator3_sinfondo1.svg";
+
+interface FooterProps {
+  showIvan?: boolean;
+}
+
+export default function Footer({ showIvan = false }: FooterProps) {
   return (
-    <footer className="border-t border-zinc-800 bg-[#0F0F0F] px-4 py-12 md:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand Column */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-semibold text-white">
-                ⚡ ShipFree
-              </span>
-            </div>
-            <p className="text-sm text-zinc-400">Built for makers, by makers</p>
-            <p className="text-sm text-zinc-500">
-              Copyright © 2025 - All rights reserved
-            </p>
-            <div className="inline-flex items-center gap-2 rounded-md border border-zinc-500 bg-zinc-800/50 px-4 py-2 text-xs text-zinc-400">
-              Built with ⚡ ShipFree
-            </div>
-          </div>
-
-          {/* Links Column */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              🚀 Links
-            </h3>
-            <ul className="space-y-3 text-sm">
+    <footer className="relative bg-[#11382d] pt-8 pb-4 text-white">
+      {/* opcional */}
+      {showIvan && (
+        <div className="absolute left-1/2 top-0 -translate-x-1/2 translate-y-6 z-10">
+          <Image
+            src={ivanNoTextSVG}
+            alt="Alegator"
+            width={160}
+            height={120}
+            priority
+          />
+        </div>
+      )}
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col lg:flex-row gap-8 mb-4">
+          {/* Enlaces rápidos */}
+          <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+            <h3 className="text-xl font-bold mb-2">ENLACES RÁPIDOS</h3>
+            <ul className="space-y-1 text-base">
               <li>
-                <a
-                  href="#wall-of-love"
-                  className="text-zinc-400 hover:text-white"
-                >
-                  Wall of love
-                </a>
+                <Link href="/" className="hover:underline">
+                  Inicio
+                </Link>
               </li>
               <li>
-                <a href="#pricing" className="text-zinc-400 hover:text-white">
-                  Pricing
-                </a>
+                <Link href="/mis-torneos" className="hover:underline">
+                  Mis Torneos
+                </Link>
               </li>
               <li>
-                <a
-                  href="https://x.com/idee8agency"
-                  target="_blank"
-                  className="text-zinc-400 hover:text-white"
-                >
-                  Twitter
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/idee8/shipfree"
-                  target="_blank"
-                  className="text-zinc-400 hover:text-white"
-                >
-                  Github
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://shipfree.idee8.agency/docs"
-                  target="_blank"
-                  className="text-zinc-400 hover:text-white"
-                >
-                  Documentation
-                </a>
+                <Link href="/eventos" className="hover:underline">
+                  Eventos
+                </Link>
               </li>
             </ul>
           </div>
-
-          {/* Legal Column */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              📜 Legal
-            </h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <a
-                  href="/tos"
-                  target="_blank"
-                  className="text-zinc-400 hover:text-white"
-                >
-                  Terms of Servise
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/privacy"
-                  target="_blank"
-                  className="text-zinc-400 hover:text-white"
-                >
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/licenses"
-                  target="_blank"
-                  className="text-zinc-400 hover:text-white"
-                >
-                  Licenses
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* By the Creator Column */}
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-400">
-              🌎 By the Creator of ShipFree
-            </h3>
-            <ul className="space-y-3 text-sm">
-              {/* {["idee8.agency", "React AI", "Code Mentor"].map((item) => ( */}
-              <li>
-                <a
-                  href="https://idee8.agency"
-                  target="_blank"
-                  className="text-zinc-400 hover:text-white"
-                >
-                  Idee8
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://codementor.idee8.agency"
-                  className="text-zinc-400 hover:text-white"
-                  target="_blank"
-                >
-                  Code Mentor
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://reactai.idee8.agency"
-                  className="text-zinc-400 hover:text-white"
-                  target="_blank"
-                >
-                  React AI
-                </a>
-              </li>
-            </ul>
-
-            {/* Newsletter Section */}
-            <div className="mt-6">
-              <h4 className="mb-3 text-sm font-semibold text-zinc-400">
-                📩 Newsletter for Makers
-              </h4>
-              <p className="mb-4 text-sm text-zinc-500">
-                Get startup tips & resources every week!
+          {/* Contáctanos */}
+          <div className="flex-1 flex flex-col items-center">
+            <div className="w-full max-w-xs text-center">
+              <h3 className="text-xl font-bold mb-2">CONTÁCTANOS</h3>
+              <p className="text-base">
+                Teléfono:
+                <br />
+                777-7777
               </p>
-              <form className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 rounded-lg bg-zinc-800/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none ring-zinc-700 transition-shadow focus:ring-2"
-                />
-                <button
-                  type="submit"
-                  className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-black hover:bg-zinc-200"
+              <p className="text-base mt-1">
+                Correo:
+                <br />
+                <a
+                  href="mailto:info@alegator.app"
+                  className="underline hover:text-[#b0e57c]"
                 >
-                  Subscribe
-                </button>
-              </form>
+                  info@alegator.app
+                </a>
+              </p>
+            </div>
+          </div>
+          {/* Síguenos */}
+          <div className="flex-1 flex flex-col items-center lg:items-end">
+            <div className="w-full max-w-xs text-center lg:text-right">
+              <h3 className="text-xl font-bold mb-2 lg:mr-3">SÍGUENOS</h3>
+              <div className="flex items-center gap-8 mt-1 justify-center lg:justify-end">
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                >
+                  <Image
+                    src="/instagram.png"
+                    alt="Instagram"
+                    width={20}
+                    height={20}
+                    style={{ minWidth: 20, minHeight: 20 }}
+                  />
+                </a>
+                <a
+                  href="https://x.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="X"
+                >
+                  <Image
+                    src="/twitter.png"
+                    alt="X"
+                    width={20}
+                    height={20}
+                    style={{ minWidth: 20, minHeight: 20 }}
+                  />
+                </a>
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                >
+                  <Image
+                    src="/facebook.png"
+                    alt="Facebook"
+                    width={20}
+                    height={20}
+                    style={{ minWidth: 20, minHeight: 20 }}
+                  />
+                </a>
+              </div>
             </div>
           </div>
         </div>
-
-        <div className="mt-12 border-t border-zinc-800 pt-8 text-center text-sm text-zinc-500">
-          © 2025 ShipFree. All Rights Reserved. Cooked for you by{" "}
-          <a
-            href="https://idee8.agency"
-            className="text-zinc-400 hover:text-white"
-          >
-            idee8.agency
-          </a>
-          .
+        <hr className="border-t border-white/70 my-4" />
+        <div className="text-center text-sm">
+          © 2025 Alegator. Todos los derechos reservados.
         </div>
       </div>
     </footer>

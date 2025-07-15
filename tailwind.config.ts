@@ -58,6 +58,13 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "825px",
+        xl: "1280px",
+        "2xl": "1536px",
+      },
     },
   },
   plugins: [tailwindAnimate, tailwindTypography],

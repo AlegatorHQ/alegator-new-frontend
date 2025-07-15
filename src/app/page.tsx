@@ -1,30 +1,13 @@
-import { Metadata } from "next";
-import CTA from "@/app/(site)/Cta";
-import FAQ from "@/app/(site)/Faq";
-import FeaturedTime from "@/app/(site)/FeaturedTime";
+"use client";
+
 import Footer from "@/app/(site)/Footer";
-import HeroSection from "@/app/(site)/Hero";
-import MakerIntro from "@/app/(site)/MakerIntro";
 import Navbar from "@/app/(site)/Navbar";
-import PricingSection from "@/app/(site)/pricing";
-import TestimonialsPage from "@/app/(site)/Testimonials";
 
-// required by Nextra
-export const metadata: Metadata = {
-  title: "ShipFree",
-};
-
-export default function Home() {
+export default function Page() {
   return (
-    <div className="bg-[#212121]">
+    <div className="bg-[#212121] min-h-screen flex flex-col">
       <Navbar />
-      <HeroSection />
-      <FeaturedTime />
-      <MakerIntro />
-      <PricingSection />
-      <FAQ />
-      <TestimonialsPage />
-      <CTA />
+      <main className="flex-1 flex items-center justify-center"></main>
       <Footer />
     </div>
   );

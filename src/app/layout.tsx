@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
-import "./globals.css";
-import type React from "react"; // Import React
+import { Roboto } from "next/font/google";
 import { cn } from "@/lib/utils";
+import "./globals.css";
 
-const bricolageGrotesque = Bricolage_Grotesque({
+const roboto = Roboto({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-roboto",
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "ShipFree",
+  title: "Alegator",
   description:
     "Open Source Alternative to ShipFast - Launch your startup in days Not in weeks",
   keywords: [
@@ -33,10 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn(bricolageGrotesque.className, "antialiased")}>
-        {children}
-      </body>
+    <html lang="en" className={cn(roboto.variable, "antialiased")}>
+      <body>{children}</body>
     </html>
   );
 }
