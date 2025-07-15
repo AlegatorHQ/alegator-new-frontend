@@ -12,7 +12,7 @@ export default function Home() {
 
   return code ? (
     <ResetPassword code={code} />
-  ) : (
+  ) : (-
     <div className="bg-[#212121]">
       <LoginForm />
       <Navbar />
