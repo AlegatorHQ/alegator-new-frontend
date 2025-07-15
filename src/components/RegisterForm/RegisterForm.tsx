@@ -12,6 +12,7 @@ import UserInformationIcon from "@/assets/user-information.svg";
 import EmailIcon from "@/assets/email.svg";
 import RepeatIcon from "@/assets/repeat.png";
 import { PasswordToggle } from "@/components/ui/PasswordToggle";
+import Link from "next/link";
 
 export function RegisterForm() {
   const [nombre, setNombre] = useState("");
