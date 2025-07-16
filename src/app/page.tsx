@@ -11,7 +11,9 @@ export default function Page() {
   const eventosRef = useRef<HTMLDivElement | null>(null);
   const sobreNosotrosRef = useRef<HTMLDivElement | null>(null);
 
-  const [hovered, setHovered] = useState<null | "bienvenida" | "eventos" | "nosotros">(null);
+  const [hovered, setHovered] = useState<
+    null | "bienvenida" | "eventos" | "nosotros"
+  >(null);
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
@@ -165,8 +167,10 @@ export default function Page() {
             priority
           />
           {/* Contenido principal */}
-          <div className="relative z-20 flex -mt-64 flex-col items-center max-w-3xl w-full pt-32 mx-auto right-32
-            [@media(max-width:825px)]:items-center [@media(max-width:825px)]:text-center [@media(max-width:825px)]:right-0">
+          <div
+            className="relative z-20 flex -mt-64 flex-col items-center max-w-3xl w-full pt-32 mx-auto right-32
+            [@media(max-width:825px)]:items-center [@media(max-width:825px)]:text-center [@media(max-width:825px)]:right-0"
+          >
             <div className="w-full flex flex-col items-center [@media(max-width:825px)]:items-center">
               <h1 className="text-white text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold leading-tight font-montserrat drop-shadow-lg mb-2 whitespace-nowrap text-center">
                 BIENVENIDO A
@@ -188,9 +192,11 @@ export default function Page() {
             <CheckoutButton
               href="#"
               className="bg-[#8ca62e] hover:bg-[#7fa650] text-white text-2xl sm:text-3xl font-bold py-5 px-20 rounded-full shadow-2xl font-montserrat mx-auto"
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault();
-                sobreNosotrosRef.current?.scrollIntoView({ behavior: "smooth" });
+                sobreNosotrosRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                });
               }}
             >
               CONÓCENOS
@@ -227,8 +233,10 @@ export default function Page() {
               w-[120px] sm:w-[180px] md:w-[220px] lg:w-[350px] xl:w-[500px]"
           />
           {/* Contenido */}
-          <div className="relative z-20 flex flex-col items-center w-full max-w-lg md:max-w-4xl
-            [@media(max-width:825px)]:items-center [@media(max-width:825px)]:text-center">
+          <div
+            className="relative z-20 flex flex-col items-center w-full max-w-lg md:max-w-4xl
+            [@media(max-width:825px)]:items-center [@media(max-width:825px)]:text-center"
+          >
             <h2 className="text-white text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-2 font-montserrat text-center">
               NUESTROS PRÓXIMOS EVENTOS
             </h2>
@@ -277,8 +285,10 @@ export default function Page() {
             priority
           />
           {/* Contenido */}
-          <div className="relative z-20 flex flex-col items-center w-full max-w-lg md:max-w-5xl
-            [@media(max-width:825px)]:items-center [@media(max-width:825px)]:text-center">
+          <div
+            className="relative z-20 flex flex-col items-center w-full max-w-lg md:max-w-5xl
+            [@media(max-width:825px)]:items-center [@media(max-width:825px)]:text-center"
+          >
             <h2 className="text-[#133c2b] text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 font-montserrat text-center">
               SOBRE NOSOTROS
             </h2>
@@ -298,13 +308,19 @@ export default function Page() {
                 />
               </div>
               <div className="flex-1 text-[#133c2b] text-base md:text-lg font-montserrat text-center md:text-left">
-                Somos un equipo apasionado por la tecnología que busca desarrollar
-                herramientas que generen soluciones efectivas para los retos de nuestra comunidad.
-                <br /><br />
-                Con Alegator, buscamos entregar una plataforma accesible, intuitiva y enriquecedora,
-                diseñada para inspirar y empoderar a las nuevas generaciones de estudiantes y entusiastas del debate.
-                <br /><br />
-                Nuestro objetivo es ofrecerte todas las herramientas necesarias para que cada torneo se convierta en una experiencia inolvidable de aprendizaje y crecimiento personal.
+                Somos un equipo apasionado por la tecnología que busca
+                desarrollar herramientas que generen soluciones efectivas para
+                los retos de nuestra comunidad.
+                <br />
+                <br />
+                Con Alegator, buscamos entregar una plataforma accesible,
+                intuitiva y enriquecedora, diseñada para inspirar y empoderar a
+                las nuevas generaciones de estudiantes y entusiastas del debate.
+                <br />
+                <br />
+                Nuestro objetivo es ofrecerte todas las herramientas necesarias
+                para que cada torneo se convierta en una experiencia inolvidable
+                de aprendizaje y crecimiento personal.
               </div>
             </div>
           </div>
