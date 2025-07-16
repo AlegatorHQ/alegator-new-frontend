@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.2",
-    "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-select": "^2.2.5",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
     "@stripe/stripe-js": "^5.6.0",
