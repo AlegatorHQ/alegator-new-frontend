@@ -130,6 +130,16 @@ export function MotionUpload({ round, onUploadMotion, onNext }: MotionUploadProp
           </CardContent>
         </Card>
       )}
+            {/* Action Buttons */}
+      <div className="flex justify-between">
+        <Button
+          onClick={onNext}
+          disabled={!isUploaded}
+          className=" item-right bg-[#6b9026] hover:bg-[#5a7821] text-white disabled:bg-[#d9d9d9] disabled:text-[#7a8174]"
+        >
+          Continuar a Votación
+        </Button>
+      </div>
     </div>
   )
 }

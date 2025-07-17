@@ -256,6 +256,16 @@ export function BallotSubmission({ round, onSubmitBallot, onNext }: BallotSubmis
           </div>
         </CardContent>
       </Card>
+      {/* Action Buttons */}
+      <div className="flex justify-between">
+        <Button
+          onClick={onNext}
+          disabled={!allBallotsCompleted}
+          className="bg-[#6b9026] hover:bg-[#5a7821] text-white disabled:bg-[#d9d9d9] disabled:text-[#7a8174]"
+        >
+          Continuar a Resultados
+        </Button>
+      </div>
     </div>
   )
 }

@@ -141,7 +141,6 @@ export default function TournamentApp() {
         
         {/* Main Content */}
         <main className="flex-1 overflow-auto p-6">{renderCurrentStep()}</main>
-        <Footer />
       </div>
     </div>
   )
