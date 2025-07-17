@@ -32,7 +32,7 @@ const tournaments = [
     endDate: "2025-07-17T18:00:00",
     description: "Torneo amateur de padel en las canchas de césped.",
     image: "/hoja-verde-completa.png",
-    location: "Presencial",
+    location: "Ciudad del Saber",
   },
   {
     id: 2,
@@ -41,7 +41,7 @@ const tournaments = [
     endDate: "2025-08-03T22:00:00",
     description: "Competencia online de League of Legends para la comunidad.",
     image: "/hoja-verde-completa.png",
-    location: "En línea",
+    location: "Hotel El Panamá",
   },
   {
     id: 3,
@@ -50,7 +50,7 @@ const tournaments = [
     endDate: "2025-06-20T23:00:00",
     description: "Una noche relajada con una gran variedad de juegos de mesa.",
     image: "/hoja-verde-completa.png",
-    location: "Presencial",
+    location: "Ciudad del Saber",
   },
 ];
 

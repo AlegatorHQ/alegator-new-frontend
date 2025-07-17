@@ -14,7 +14,7 @@ const events = [
     endDate: "2025-07-17T18:00:00",
     description: "Torneo amateur de padel en las canchas de césped.",
     image: "/hoja-verde-completa.png",
-    location: "Presencial",
+    location: "Ciudad del Saber",
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const events = [
     endDate: "2025-08-03T22:00:00",
     description: "Competencia online de League of Legends para la comunidad.",
     image: "/hoja-verde-completa.png",
-    location: "En línea",
+    location: "Hotel El Panamá",
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ const events = [
     endDate: "2025-06-20T23:00:00",
     description: "Una noche relajada con una gran variedad de juegos de mesa.",
     image: "/hoja-verde-completa.png",
-    location: "Presencial",
+    location: "Ciudad del Saber",
   },
   {
     id: 4,
@@ -41,7 +41,7 @@ const events = [
     endDate: "2025-07-16T09:00:00",
     description: "Hackathon de 24 horas para desarrollar nuevas aplicaciones.",
     image: "/hoja-verde-completa.png",
-    location: "En línea",
+    location: "Hotel El Panamá",
   },
   {
     id: 5,
@@ -50,7 +50,7 @@ const events = [
     endDate: "2025-09-12T20:00:00",
     description: "Torneo de ajedrez para todas las edades y niveles.",
     image: "/hoja-verde-completa.png",
-    location: "Presencial",
+    location: "Ciudad del Saber",
   },
 ];
 
@@ -184,8 +184,8 @@ export default function EventsPage() {
               onChange={(e) => setLocationFilter(e.target.value)}
             >
               <option value="todos">Ubicación</option>
-              <option value="En línea">En línea</option>
-              <option value="Presencial">Presencial</option>
+              <option value="Hotel El Panamá">Hotel El Panamá</option>
+              <option value="Ciudad del Saber">Ciudad del Saber</option>
             </select>
             <select
               className="p-2 rounded-lg border border-black"

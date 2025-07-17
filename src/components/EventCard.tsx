@@ -65,7 +65,7 @@ const EventCard = React.forwardRef<HTMLDivElement, EventCardProps>(
           {/* Location */}
           <p className="flex text-sm font-semibold text-[#11372A] mb-1.5">
             <MapPin className="w-4 h-4 mr-1" />
-            Modalidad: {location}
+            Ubicación: {location}
           </p>
 
           {/* Description */}

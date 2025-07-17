@@ -49,7 +49,7 @@ export default function Page() {
       endDate: "2025-08-12",
       description:
         "El torneo más grande del año para debatientes de todo el país.",
-      location: "Ciudad de México",
+      location: "Virtual",
     },
     {
       id: 2,
@@ -58,7 +58,7 @@ export default function Page() {
       endDate: "2025-09-07",
       description:
         "Competencia interuniversitaria para fomentar el debate académico.",
-      location: "Monterrey",
+      location: "Centro Regional de Chiriquí, UTP",
     },
     {
       id: 3,
@@ -66,7 +66,7 @@ export default function Page() {
       startDate: "2025-10-15",
       endDate: "2025-10-16",
       description: "Torneo para estudiantes de secundaria y preparatoria.",
-      location: "Guadalajara",
+      location: "Hotel El Panamá",
     },
   ];
 

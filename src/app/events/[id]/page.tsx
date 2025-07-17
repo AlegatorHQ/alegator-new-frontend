@@ -14,7 +14,7 @@ const events = [
     startDate: "2025-07-15T10:00:00",
     endDate: "2025-07-17T18:00:00",
     description: "Torneo amateur de padel en las canchas de césped.",
-    location: "Presencial",
+    location: "Ciudad del Saber",
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const events = [
     startDate: "2025-08-01T15:00:00",
     endDate: "2025-08-03T22:00:00",
     description: "Competencia online de League of Legends para la comunidad.",
-    location: "En línea",
+    location: "Hotel El Panamá",
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ const events = [
     startDate: "2025-06-20T18:00:00",
     endDate: "2025-06-20T23:00:00",
     description: "Una noche relajada con una gran variedad de juegos de mesa.",
-    location: "Presencial",
+    location: "Ciudad del Saber",
   },
   {
     id: 4,
@@ -38,7 +38,7 @@ const events = [
     startDate: "2025-07-15T09:00:00",
     endDate: "2025-07-16T09:00:00",
     description: "Hackathon de 24 horas para desarrollar nuevas aplicaciones.",
-    location: "En línea",
+    location: "Hotel El Panamá",
   },
   {
     id: 5,
@@ -46,7 +46,7 @@ const events = [
     startDate: "2025-09-10T14:00:00",
     endDate: "2025-09-12T20:00:00",
     description: "Torneo de ajedrez para todas las edades y niveles.",
-    location: "Presencial",
+    location: "Ciudad del Saber",
   },
 ];
 
