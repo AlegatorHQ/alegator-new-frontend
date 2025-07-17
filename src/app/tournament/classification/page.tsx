@@ -31,12 +31,12 @@ export default function TournamentClassification() {
   )
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-[#ADBC9F]">
       <Sidebar />
 
       <div className="flex-1 flex flex-col">
         <main className="flex-1 p-8">
-          <h1 className="text-4xl font-bold text-green-800 mb-8 text-center">CLASIFICACIÓN</h1>
+          <h1 className="text-4xl font-bold text-[#11372A] mb-8 text-center">CLASIFICACIÓN</h1>
 
           <div className="max-w-6xl mx-auto">
             <Card className="bg-white/80 backdrop-blur">
@@ -60,7 +60,7 @@ export default function TournamentClassification() {
 
                 {/* Classification Table */}
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full hidden md:table">
                     <thead className="bg-green-800 text-white">
                       <tr>
                         <th className="p-3 text-left">
@@ -88,16 +88,40 @@ export default function TournamentClassification() {
                       ))}
                     </tbody>
                   </table>
-                </div>
 
-                {filteredParticipants.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    No se encontraron participantes que coincidan con la búsqueda.
+                  {/* Mobile view */}
+                  <div className="space-y-4 md:hidden">
+                    {filteredParticipants.map((participant, index) => (
+                      <div
+                        key={index}
+                        className="border rounded-lg p-4 bg-white shadow-sm text-[#11372A]"
+                      >
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-bold text-green-800">
+                            #{participant.rank}
+                          </span>
+                          <span className="text-sm font-semibold">{participant.points} pts</span>
+                        </div>
+                        <div className="text-md font-semibold">{participant.name}</div>
+                        <div className="text-sm text-gray-600 mb-2">{participant.team}</div>
+                        <div className="flex justify-between text-sm text-gray-700">
+                          <span>R1: {participant.r1}</span>
+                          <span>R2: {participant.r2}</span>
+                          <span>R3: {participant.r3}</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
+
+                  {filteredParticipants.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      No se encontraron participantes que coincidan con la búsqueda.
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
-          </div>
+            </div>
         </main>
 
         <Footer />
