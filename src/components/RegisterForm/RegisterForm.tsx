@@ -12,7 +12,7 @@ import UserInformationIcon from "@/assets/user-information.svg";
 import EmailIcon from "@/assets/email.svg";
 import RepeatIcon from "@/assets/repeat.png";
 import { PasswordToggle } from "@/components/ui/PasswordToggle";
-import Link from "next/link";
+import { toast } from 'react-hot-toast';
 
 export function RegisterForm() {
   const [nombre, setNombre] = useState("");
@@ -39,7 +39,7 @@ export function RegisterForm() {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data: supabaseData, error: supabaseError } = await supabase.auth.signUp({
       email: correo,
       password,
       options: {
@@ -51,9 +51,37 @@ export function RegisterForm() {
       },
     });
 
-    if (error) {
-      setRegisterMessage("Error al registrarse: " + error.message);
-    } else {
+    if (supabaseError) {
+      toast.error("Error al registrarse con Supabase: " + supabaseError.message);
+      setLoading(false);
+      return;
+    }
+
+    // Now, send data to Django backend for dj_rest_auth registration
+    try {
+      const backendResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+            email: correo,
+            password2: confirmarPassword,
+            password1: password,
+            first_name: nombre,
+            last_name: apellido,
+          }),
+        }
+      );
+
+      if (!backendResponse.ok) {
+        const errorData = await backendResponse.json();
+        throw new Error(errorData.email ? errorData.email[0] : errorData.username ? errorData.username[0] : errorData.password ? errorData.password[0] : errorData.non_field_errors ? errorData.non_field_errors[0] : "Error al registrarse con el backend de Django.");
+      }
+
       // Guarda los props en sessionStorage
       if (typeof window !== "undefined") {
         sessionStorage.setItem(
@@ -68,6 +96,10 @@ export function RegisterForm() {
         );
       }
       router.push("/successful");
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      setLoading(false);
     }
     setLoading(false);
   };
