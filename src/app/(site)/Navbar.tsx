@@ -21,7 +21,7 @@ type NavbarProps = {
 
 const defaultItems: NavbarItem[] = [
   { href: "/", label: "INICIO" },
-  { href: "/my-tournaments", label: "MIS TORNEOS" },
+  { href: "/my-tournaments", label: "TORNEOS" },
   { href: "/events", label: "EVENTOS" },
 ];
 

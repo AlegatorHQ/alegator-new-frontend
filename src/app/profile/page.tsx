@@ -24,36 +24,6 @@ function maskEmail(email: string) {
   return `${name[0]}***${name[name.length - 1]}@${domain}`;
 }
 
-const tournaments = [
-  {
-    id: 1,
-    name: "Torneo de Padel",
-    startDate: "2025-07-15T10:00:00",
-    endDate: "2025-07-17T18:00:00",
-    description: "Torneo amateur de padel en las canchas de césped.",
-    image: "/hoja-verde-completa.png",
-    location: "Cancha de Padel, Boquete",
-  },
-  {
-    id: 2,
-    name: "Campeonato de League of Legends",
-    startDate: "2025-08-01T15:00:00",
-    endDate: "2025-08-03T22:00:00",
-    description: "Competencia online de League of Legends para la comunidad.",
-    image: "/hoja-verde-completa.png",
-    location: "Virtual",
-  },
-  {
-    id: 3,
-    name: "Noche de Juegos de Mesa",
-    startDate: "2025-06-20T18:00:00",
-    endDate: "2025-06-20T23:00:00",
-    description: "Una noche relajada con una gran variedad de juegos de mesa.",
-    image: "/hoja-verde-completa.png",
-    location: "Ciudad del Saber",
-  },
-];
-
 export default function ProfilePage() {
   const router = useRouter();
   const [nombre, setNombre] = useState("");
@@ -65,10 +35,11 @@ export default function ProfilePage() {
   const [confirmarPassword, setConfirmarPassword] = useState("");
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [participatedTournaments, setParticipatedTournaments] = useState<any[]>([]);
 
   useEffect(() => {
     const supabase = createClient();
-    const fetchUser = async () => {
+    const fetchUserAndTournaments = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -88,9 +59,31 @@ export default function ProfilePage() {
         setPassword(data.password || "");
         setConfirmarPassword(data.confirmarPassword || "");
       }
+
+      // Obtener torneos en los que el usuario participa
+      // Supón que hay una tabla "tournament_participants" con user_id y tournament_id
+      const { data: participantData, error: participantError } = await supabase
+        .from("tournament_participants")
+        .select("tournament_id")
+        .eq("user_id", user.id);
+
+      if (!participantError && participantData && participantData.length > 0) {
+        const tournamentIds = participantData.map((p: any) => p.tournament_id);
+        const { data: tournamentsData, error: tournamentsError } = await supabase
+          .from("tournaments")
+          .select("*")
+          .in("id", tournamentIds);
+
+        if (!tournamentsError && tournamentsData) {
+          setParticipatedTournaments(tournamentsData);
+        }
+      } else {
+        setParticipatedTournaments([]);
+      }
+
       setLoading(false);
     };
-    fetchUser();
+    fetchUserAndTournaments();
   }, [router]);
 
   const handleAvatarChange = (src: string) => {
@@ -230,13 +223,13 @@ export default function ProfilePage() {
               Torneos en los que participaste
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-              {tournaments.length > 0 ? (
-                tournaments.map((event) => (
+              {participatedTournaments.length > 0 ? (
+                participatedTournaments.map((event) => (
                   <EventCard
                     key={event.id}
                     id={event.id}
                     name={event.name}
-                    startDate={event.startDate}
+                    startDate={event.date}
                     endDate={event.endDate}
                     description={event.description}
                     location={event.location}
