@@ -12,7 +12,7 @@ import PasswordIcon from "@/assets/password-icon.svg";
 import ivanNoTextSVG from "@/assets/alegator3_sinfondo1.svg";
 import EyeIcon from "@/assets/eye.svg";
 import EyeOffIcon from "@/assets/eye-off.svg";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -61,7 +61,9 @@ export function LoginForm() {
 
       if (!backendResponse.ok) {
         const errorData = await backendResponse.json();
-        throw new Error(errorData.error || "Failed to log in with Django backend.");
+        throw new Error(
+          errorData.error || "Failed to log in with Django backend."
+        );
       }
 
       const djangoAuthData = await backendResponse.json();

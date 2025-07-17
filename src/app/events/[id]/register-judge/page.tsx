@@ -33,8 +33,20 @@ const Step1JudgeType = ({
 );
 
 // Step 2: Judge Details Form Component
-const Step2JudgeDetails = ({ judgeType, onSubmit, onBack }: { judgeType: any, onSubmit: any, onBack: any}) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+const Step2JudgeDetails = ({
+  judgeType,
+  onSubmit,
+  onBack,
+}: {
+  judgeType: any;
+  onSubmit: any;
+  onBack: any;
+}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   return (
     <div className="bg-white p-8 rounded-lg shadow-md">
       <h2 className="text-3xl font-semibold mb-6 text-center text-[#11372A]">
@@ -82,7 +94,7 @@ const Step2JudgeDetails = ({ judgeType, onSubmit, onBack }: { judgeType: any, on
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
               />
             </div>
-          )} 
+          )}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Provincia
@@ -145,7 +157,10 @@ const Step3JudgeConfirmation = ({ formData }: { formData: any }) => (
         <strong>Institución:</strong> {formData.judgeInstitution}
       </p>
       {formData.judgeType === "independent" && (
-        <p><strong>Equipo que representas: </strong>{formData.judgeTeam}</p>
+        <p>
+          <strong>Equipo que representas: </strong>
+          {formData.judgeTeam}
+        </p>
       )}
     </div>
   </div>
@@ -160,7 +175,9 @@ export default function RegisterJudgePage() {
       <main className="flex-1 flex flex-col items-center justify-start pt-24 px-4">
         <RegistrationForm steps={steps} title="Registro de Juez">
           {(step, formData, nextStep, prevStep, updateFormData) => {
-            const handleStep1Submit = (type: "independent" | "institutional") => {
+            const handleStep1Submit = (
+              type: "independent" | "institutional"
+            ) => {
               updateFormData({ judgeType: type });
               nextStep();
             };
@@ -171,11 +188,17 @@ export default function RegisterJudgePage() {
             };
 
             if (step === 1) {
-              return <Step1JudgeType onSelectJudgeType={handleStep1Submit} />
+              return <Step1JudgeType onSelectJudgeType={handleStep1Submit} />;
             }
 
             if (step === 2) {
-              return <Step2JudgeDetails judgeType={formData.judgeType} onSubmit={handleStep2Submit} onBack={prevStep} />
+              return (
+                <Step2JudgeDetails
+                  judgeType={formData.judgeType}
+                  onSubmit={handleStep2Submit}
+                  onBack={prevStep}
+                />
+              );
             }
             if (step === 3) {
               return <Step3JudgeConfirmation formData={formData} />;

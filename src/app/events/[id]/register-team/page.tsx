@@ -39,8 +39,20 @@ const Step1TeamType = ({
 );
 
 // Step 2: Team Details Form Component
-const Step2TeamDetails = ({ teamType, onSubmit, onBack }: { teamType: any, onSubmit: any, onBack: any }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+const Step2TeamDetails = ({
+  teamType,
+  onSubmit,
+  onBack,
+}: {
+  teamType: any;
+  onSubmit: any;
+  onBack: any;
+}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   return (
     <div className="bg-white p-8 rounded-lg shadow-md mb-10">
       <h2 className="text-3xl font-semibold mb-6 text-center text-[#11372A]">
@@ -212,7 +224,9 @@ const Step3Success = ({ formData }: { formData: any }) => (
         <strong>Tipo de Equipo:</strong>{" "}
         {formData.teamType === "independent"
           ? "Independiente"
-          : formData.teamType === "mixed" ? "Mixto" : "Institucional"}
+          : formData.teamType === "mixed"
+            ? "Mixto"
+            : "Institucional"}
       </p>
       <p>
         <strong>Nombre del Equipo:</strong> {formData.teamName}
@@ -246,7 +260,9 @@ export default function RegisterTeamPage() {
       <main className="flex-1 flex flex-col items-center justify-start pt-24 px-4">
         <RegistrationForm steps={steps} title="Registro de Equipo">
           {(step, formData, nextStep, prevStep, updateFormData) => {
-            const handleStep1Submit = (type: "independent" | "mixed" | "institutional") => {
+            const handleStep1Submit = (
+              type: "independent" | "mixed" | "institutional"
+            ) => {
               updateFormData({ teamType: type });
               nextStep();
             };
@@ -260,7 +276,13 @@ export default function RegisterTeamPage() {
               return <Step1TeamType onSelectTeamType={handleStep1Submit} />;
             }
             if (step === 2) {
-              return <Step2TeamDetails teamType={formData.teamType} onSubmit={handleStep2Submit} onBack={prevStep} />;
+              return (
+                <Step2TeamDetails
+                  teamType={formData.teamType}
+                  onSubmit={handleStep2Submit}
+                  onBack={prevStep}
+                />
+              );
             }
             if (step === 3) {
               return <Step3Success formData={formData} />;

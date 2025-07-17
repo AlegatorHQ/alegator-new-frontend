@@ -9,7 +9,8 @@ interface ProgressBarProps {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep }) => {
   const totalSteps = steps.length;
-  const progressPercentage = totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 0;
+  const progressPercentage =
+    totalSteps > 1 ? ((currentStep - 1) / (totalSteps - 1)) * 100 : 0;
 
   return (
     <div className="w-full px-4 sm:px-0">
@@ -50,7 +51,11 @@ interface RegistrationFormProps {
   ) => ReactNode;
 }
 
-export default function RegistrationForm({ steps, title, children }: RegistrationFormProps) {
+export default function RegistrationForm({
+  steps,
+  title,
+  children,
+}: RegistrationFormProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
 
@@ -63,7 +68,9 @@ export default function RegistrationForm({ steps, title, children }: Registratio
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <h1 className="text-5xl font-bold text-center mb-8 text-[#11372A]">{title}</h1>
+      <h1 className="text-5xl font-bold text-center mb-8 text-[#11372A]">
+        {title}
+      </h1>
       <ProgressBar steps={steps} currentStep={step} />
       <div className="mt-8">
         {children(step, formData, nextStep, prevStep, updateFormData)}
