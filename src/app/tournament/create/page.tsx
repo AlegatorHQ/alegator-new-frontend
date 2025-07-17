@@ -7,8 +7,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label" 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Footer from "@/app/(site)/Footer";
 import Navbar from "@/app/(site)/Navbar";
@@ -33,16 +32,16 @@ export default function CreateTournament() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#ADBC9F]">
         <Navbar />
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-4xl font-bold text-green-800 mb-8 text-center">CREAR NUEVO TORNEO</h1>
+          <h1 className="text-4xl font-bold text-[#11372A] mb-8 text-center">CREAR NUEVO TORNEO</h1>
 
           <Card className="bg-white/80 backdrop-blur">
             <CardHeader>
-              <CardTitle className="text-green-800">Información del Torneo</CardTitle>
+              <CardTitle className="text-2xl font-bold text-[#11372A]">Información del Torneo</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -65,7 +64,6 @@ export default function CreateTournament() {
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Descripción del torneo"
-                    rows={4}
                   />
                 </div>
 
@@ -138,10 +136,10 @@ export default function CreateTournament() {
                 </div>
 
                 <div className="flex gap-4 pt-6">
-                  <Button type="button" variant="outline" onClick={() => router.back()} className="flex-1">
+                  <Button type="button" variant="outline" onClick={() => router.back()} className="flex-1 w-full border-[#11372A] text-[#11372A] hover:bg-gray-200 hover:text-[#11372A] bg-transparent">
                     Cancelar
                   </Button>
-                  <Button type="submit" className="flex-1 alegator-button text-white hover:bg-green-600">
+                  <Button type="submit" className="flex-1 w-full text-white text-md bg-[#6B9026] hover:bg-[#55731e]">
                     Crear Torneo
                   </Button>
                 </div>
