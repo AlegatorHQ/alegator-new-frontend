@@ -10,6 +10,7 @@ import { ChevronRight, User, Settings, LogOut } from "lucide-react";
 import Footer from "@/app/(site)/Footer";
 import Navbar from "@/app/(site)/Navbar";
 import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
 
 const PALETTE = {
   bg: "#b7c7a2",
@@ -34,6 +35,7 @@ export default function Dashboard() {
   const [selectedTab, setSelectedTab] = useState<"created" | "participated">(
     "created"
   );
+  const [avatar, setAvatar] = useState("/avatars/avatar1.png");
   const router = useRouter();
 
   useEffect(() => {
@@ -45,6 +47,13 @@ export default function Dashboard() {
       if (user) {
         setUsername(user.user_metadata?.username || user.email || "Usuario");
         setUserCode(user.id?.slice(0, 7) || "------");
+
+        // Obtener avatar guardado en localStorage (de profile)
+        const storedProfile = localStorage.getItem("profileData");
+        if (storedProfile) {
+          const data = JSON.parse(storedProfile);
+          setAvatar(data.avatar || "/avatars/avatar1.png");
+        }
 
         // Torneos creados por el usuario
         const { data: createdData, error: createdError } = await supabase
@@ -150,10 +159,16 @@ export default function Dashboard() {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center"
+                    className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden"
                     style={{ background: PALETTE.green }}
                   >
-                    <User className="text-white" size={24} />
+                    <Image
+                      src={avatar}
+                      alt="Avatar"
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover"
+                    />
                   </div>
                   <div>
                     <p
