@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ChevronRight, User, Settings, LogOut } from "lucide-react"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ChevronRight, User, Settings, LogOut } from "lucide-react";
 import Footer from "@/app/(site)/Footer";
 import Navbar from "@/app/(site)/Navbar";
 
@@ -16,14 +16,16 @@ export default function Dashboard() {
     { name: "TorneosRandom", status: "Pendiente", action: "Ver Detalles" },
     { name: "TorneosRandom", status: "Pendiente", action: "Ver Detalles" },
     { name: "TorneosRandom", status: "Pendiente", action: "Ver Detalles" },
-  ])
+  ]);
 
   return (
     <div className="min-h-screen flex flex-col">
-        <Navbar />
+      <Navbar />
 
       <main className="flex-1 container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-green-800 mb-8">BIENVENIDO USERNAME</h1>
+        <h1 className="text-4xl font-bold text-green-800 mb-8">
+          BIENVENIDO USERNAME
+        </h1>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Left Column */}
@@ -72,7 +74,9 @@ export default function Dashboard() {
             {/* Tournament List */}
             <Card className="bg-white/80 backdrop-blur">
               <CardHeader>
-                <CardTitle className="text-green-800">LISTA DE TUS TORNEOS</CardTitle>
+                <CardTitle className="text-green-800">
+                  LISTA DE TUS TORNEOS
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Button className="w-full bg-green-800 text-white hover:bg-green-700 flex items-center justify-between">
@@ -92,24 +96,42 @@ export default function Dashboard() {
           <div>
             <Card className="bg-white/80 backdrop-blur">
               <CardHeader>
-                <CardTitle className="text-green-800">TORNEOS EN LOS QUE PARTICIPASTE</CardTitle>
+                <CardTitle className="text-green-800">
+                  TORNEOS EN LOS QUE PARTICIPASTE
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {tournaments.map((tournament, index) => (
-                  <div key={index} className="flex items-center justify-between py-3 border-b last:border-b-0">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between py-3 border-b last:border-b-0"
+                  >
                     <div className="flex items-center gap-4">
-                    <Badge
-                        variant={tournament.status === "Terminado" ? "default" : "secondary"}
-                        className={tournament.status === "Terminado" ? "bg-green-600" : "bg-yellow-500"}
+                      <Badge
+                        variant={
+                          tournament.status === "Terminado"
+                            ? "default"
+                            : "secondary"
+                        }
+                        className={
+                          tournament.status === "Terminado"
+                            ? "bg-green-600"
+                            : "bg-yellow-500"
+                        }
                       >
                         {tournament.status === "Terminado" ? "T" : "P"}
                       </Badge>
                       <div>
                         <p className="font-semibold">{tournament.name}</p>
-                        <p className="text-sm text-gray-600">{tournament.status}</p>
+                        <p className="text-sm text-gray-600">
+                          {tournament.status}
+                        </p>
                       </div>
                     </div>
-                    <Button variant="link" className="text-green-800 hover:text-green-600">
+                    <Button
+                      variant="link"
+                      className="text-green-800 hover:text-green-600"
+                    >
                       {tournament.action}
                     </Button>
                   </div>
@@ -129,5 +151,5 @@ export default function Dashboard() {
 
       <Footer />
     </div>
-  )
+  );
 }
