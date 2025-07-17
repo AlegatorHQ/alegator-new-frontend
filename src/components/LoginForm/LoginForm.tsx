@@ -12,6 +12,7 @@ import PasswordIcon from "@/assets/password-icon.svg";
 import ivanNoTextSVG from "@/assets/alegator3_sinfondo1.svg";
 import EyeIcon from "@/assets/eye.svg";
 import EyeOffIcon from "@/assets/eye-off.svg";
+import { toast } from 'react-hot-toast';
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -26,25 +27,54 @@ export function LoginForm() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setResetMessage("");
-
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // 1. Sign in with Supabase to get the access token
+      const { data: supabaseData, error: supabaseError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-      if (error) {
-        setResetMessage("Usuario o contraseña incorrectos.");
-      } else {
-        router.push("/");
+      if (supabaseError) {
+        toast.error(supabaseError.message);
+        return;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+      const supabaseAccessToken = supabaseData?.session?.access_token;
+
+      if (!supabaseAccessToken) {
+        toast.error("Could not get access token from Supabase.");
+        return;
+      }
+
+      // 2. Send the Supabase token to the Django backend
+      const backendResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ access_token: supabaseAccessToken }),
+        }
+      );
+
+      if (!backendResponse.ok) {
+        const errorData = await backendResponse.json();
+        throw new Error(errorData.error || "Failed to log in with Django backend.");
+      }
+
+      const djangoAuthData = await backendResponse.json();
+
+      // 3. Store the Django JWT tokens (e.g., in localStorage)
+      localStorage.setItem("django_access_token", djangoAuthData.access);
+      localStorage.setItem("django_refresh_token", djangoAuthData.refresh);
+
+      // 4. Refresh and redirect
+      router.refresh();
+      router.push("/");
     } catch (error) {
-      setResetMessage("Error al iniciar sesión");
-    } finally {
-      setLoading(false);
+      toast.error((error as Error).message);
     }
   };
 
