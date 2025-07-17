@@ -2,10 +2,9 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Search, Trophy, Filter } from "lucide-react"
-import { Sidebar } from "@/components/sidebar"
+import { Sidebar } from "@/app/(site)/AdminSidebar";
 import Footer from "@/app/(site)/Footer";
 
 export default function TournamentClassification() {
@@ -39,8 +38,8 @@ export default function TournamentClassification() {
           <h1 className="text-4xl font-bold text-green-800 mb-8 text-center">CLASIFICACIÓN</h1>
 
           <div className="max-w-6xl mx-auto">
-            <Card className="bg-white/80 backdrop-blur">
-              <CardContent className="p-6">
+            <div className="bg-white/80 backdrop-blur rounded-xl shadow-lg">
+              <div className="p-6">
                 {/* Search and Filter */}
                 <div className="flex gap-4 mb-6">
                   <div className="flex-1 relative">
@@ -95,8 +94,8 @@ export default function TournamentClassification() {
                     No se encontraron participantes que coincidan con la búsqueda.
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </main>
 

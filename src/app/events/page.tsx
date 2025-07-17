@@ -1,9 +1,8 @@
 "use client";
 
-import { EventCard } from "@/components/ui/card";
+import { EventCard } from "@/components/EventCard";
 import Footer from "@/app/(site)/Footer";
 import Navbar from "@/app/(site)/Navbar";
-import Image from "next/image";
 import { useState, useMemo } from "react";
 
 // Sample event data
@@ -67,7 +66,7 @@ export default function EventsPage() {
   const filteredEvents = useMemo(() => {
     const now = new Date();
 
-    let eventsToList = events.filter((event) => {
+    const eventsToList = events.filter((event) => {
       const eventStartDate = new Date(event.startDate);
       const eventEndDate = new Date(event.endDate);
       const matchesSearch = event.name

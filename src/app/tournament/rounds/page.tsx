@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Sidebar } from "@/components/sidebar"
+import { Sidebar } from "@/app/(site)/AdminSidebar";
 import Footer from "@/app/(site)/Footer";
 
 const roundSteps = [

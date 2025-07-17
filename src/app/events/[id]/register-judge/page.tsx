@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import RegistrationForm from "@/components/RegistrationForm";
 import Navbar from "@/app/(site)/Navbar";
 import Footer from "@/app/(site)/Footer";
@@ -34,7 +34,7 @@ const Step1JudgeType = ({
 
 // Step 2: Judge Details Form Component
 const Step2JudgeDetails = ({ judgeType, onSubmit, onBack }: { judgeType: any, onSubmit: any, onBack: any}) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: {} } = useForm();
   return (
     <div className="bg-white p-8 rounded-lg shadow-md">
       <h2 className="text-3xl font-semibold mb-6 text-center text-[#11372A]">

@@ -4,28 +4,81 @@ import Image from "next/image";
 import Link from "next/link";
 import AlegatorLogo from "@/assets/alegator-logo.svg";
 import LogoutIcon from "@/assets/logout.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function Navbar() {
+export type NavbarItem = {
+  href: string;
+  label: string;
+  icon?: React.ReactNode;
+  showWhenLoggedIn?: boolean;
+  showWhenLoggedOut?: boolean;
+};
+
+type NavbarProps = {
+  items?: NavbarItem[];
+};
+
+const defaultItems: NavbarItem[] = [
+  { href: "/", label: "INICIO" },
+  { href: "/my-tournaments", label: "MIS TORNEOS" },
+  { href: "/events", label: "EVENTOS" },
+];
+
+// Evita recargar el Navbar - consulta el estado de sesión una vez y escucha cambios
+let cachedSession: boolean | null = null;
+let listeners: ((logged: boolean) => void)[] = [];
+
+function subscribeSession(callback: (logged: boolean) => void) {
+  listeners.push(callback);
+  callback(cachedSession ?? false);
+  return () => {
+    listeners = listeners.filter((cb) => cb !== callback);
+  };
+}
+
+function notifyListeners(logged: boolean) {
+  listeners.forEach((cb) => cb(logged));
+}
+
+function setupSessionListener() {
+  if (typeof window === "undefined" || setupSessionListener.done) return;
+  setupSessionListener.done = true;
+  const supabase = createClient();
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    cachedSession = !!session;
+    notifyListeners(cachedSession);
+  });
+  supabase.auth.onAuthStateChange((_event, session) => {
+    cachedSession = !!session;
+    notifyListeners(cachedSession);
+  });
+}
+setupSessionListener.done = false;
+
+// Memoiza el logo para evitar recarga innecesaria
+const MemoLogo = memo(function MemoLogo() {
+  return (
+    <Image
+      src={AlegatorLogo}
+      alt="Alegator"
+      width={90}
+      height={90}
+      className="h-20 w-auto"
+      priority
+      draggable={false}
+    />
+  );
+});
+
+export default function Navbar({ items = defaultItems }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(cachedSession ?? false);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsLoggedIn(!!session);
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setIsLoggedIn(!!session);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    setupSessionListener();
+    const unsubscribe = subscribeSession(setIsLoggedIn);
+    return unsubscribe;
   }, []);
 
   const handleLogout = async () => {
@@ -38,37 +91,21 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 z-50 w-full bg-[#11372A] font-montserrat">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-8">
-        <Link href="/" className="flex items-center h-20 min-w-[80px]">
-          <Image
-            src={AlegatorLogo}
-            alt="Alegator"
-            width={80}
-            height={80}
-            className="h-20 w-auto"
-            priority
-          />
+        <Link href="/" className="flex items-center h-20 min-w-[90px]">
+          <MemoLogo />
         </Link>
 
         {/* Menú desktop */}
         <div className="flex-1 flex justify-end items-center gap-12">
-          <Link
-            href="/"
-            className="text-white font-bold text-lg hidden md:block"
-          >
-            INICIO
-          </Link>
-          <Link
-            href="/tournaments"
-            className="text-white font-bold text-lg hidden md:block"
-          >
-            MIS TORNEOS
-          </Link>
-          <Link
-            href="/events"
-            className="text-white font-bold text-lg hidden md:block"
-          >
-            EVENTOS
-          </Link>
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-white font-bold text-lg hidden md:block"
+            >
+              {item.icon ? item.icon : item.label}
+            </Link>
+          ))}
           {/* Perfil o Iniciar sesión */}
           {isLoggedIn ? (
             <>
@@ -138,18 +175,15 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden bg-[#154134] border-t border-[#1e5943] px-6 py-4 font-montserrat">
           <nav className="flex flex-col items-center gap-4">
-            <Link href="/" className="text-white font-bold text-lg">
-              INICIO
-            </Link>
-            <Link
-              href="/my-tournaments"
-              className="text-white font-bold text-lg"
-            >
-              MIS TORNEOS
-            </Link>
-            <Link href="/events" className="text-white font-bold text-lg">
-              EVENTOS
-            </Link>
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-white font-bold text-lg"
+              >
+                {item.icon ? item.icon : item.label}
+              </Link>
+            ))}
             <hr className="w-full border-[#1e5943] my-2" />
             {/* Perfil o Iniciar sesión en móvil */}
             {isLoggedIn ? (

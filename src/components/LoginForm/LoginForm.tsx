@@ -12,6 +12,7 @@ import PasswordIcon from "@/assets/password-icon.svg";
 import ivanNoTextSVG from "@/assets/alegator3_sinfondo1.svg";
 import EyeIcon from "@/assets/eye.svg";
 import EyeOffIcon from "@/assets/eye-off.svg";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -21,12 +22,13 @@ export function LoginForm() {
   const [showReset, setShowReset] = useState(false);
   const [resetMessage, setResetMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setShowLoading(true); // Mostrar loading solo al hacer login
     setResetMessage("");
 
     try {
@@ -37,14 +39,16 @@ export function LoginForm() {
 
       if (error) {
         setResetMessage("Usuario o contraseña incorrectos.");
+        setShowLoading(false); // Ocultar loading si hay error
       } else {
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 900);
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setResetMessage("Error al iniciar sesión");
-    } finally {
-      setLoading(false);
+      setShowLoading(false);
     }
   };
 
@@ -60,6 +64,10 @@ export function LoginForm() {
     }
     setLoading(false);
   };
+
+  if (showLoading) {
+    return <LoadingScreen progress={100} duration={900} />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen px-1 py-4 sm:px-2 bg-transparent">

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronRight, ChevronLeft } from "lucide-react"
-import { Sidebar } from "@/components/sidebar"
+import { Sidebar } from "@/app/(site)/AdminSidebar";
 import Footer from "@/app/(site)/Footer";
 
 export default function TournamentStaff() {

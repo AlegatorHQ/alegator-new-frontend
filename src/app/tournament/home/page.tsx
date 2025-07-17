@@ -6,8 +6,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Trophy, Users, MessageSquare, Settings, BarChart3, Calendar, Clock, TrendingUp } from "lucide-react"
+import { Sidebar } from "@/app/(site)/AdminSidebar";
 import Footer from "@/app/(site)/Footer";
-import { Sidebar } from "@/components/sidebar"
 
 export default function AdminTournamentHomePage() {
   const [selectedTournament] = useState({
@@ -121,7 +121,7 @@ export default function AdminTournamentHomePage() {
       <Sidebar />
 
       <div className="flex-1 flex flex-col">
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main className="flex-1 container mx-auto px-4 py-8 md:mt-0 mt-16">
         {/* Tournament Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
