@@ -386,7 +386,7 @@ export default function Page() {
               className="bg-white border-2 border-[#133c2b] text-[#133c2b] font-bold py-2 px-8 rounded-full text-base sm:text-lg font-montserrat hover:bg-[#e6e6e6] transition"
               onClick={() => router.push("/events")}
             >
-              Ver Torneos
+              Ver Eventos
             </button>
           </div>
         </section>
