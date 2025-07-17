@@ -97,15 +97,29 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
 
         {/* Menú desktop */}
         <div className="flex-1 flex justify-end items-center gap-12">
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-white font-bold text-lg hidden md:block"
-            >
-              {item.icon ? item.icon : item.label}
-            </Link>
-          ))}
+          {items.map((item) => {
+            // Si el ítem es "TORNEOS" y el usuario no está logueado, redirige a /login
+            if (item.href === "/my-tournaments" && !isLoggedIn) {
+              return (
+                <Link
+                  key={item.href}
+                  href="/login"
+                  className="text-white font-bold text-lg hidden md:block"
+                >
+                  {item.icon ? item.icon : item.label}
+                </Link>
+              );
+            }
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-white font-bold text-lg hidden md:block"
+              >
+                {item.icon ? item.icon : item.label}
+              </Link>
+            );
+          })}
           {/* Perfil o Iniciar sesión */}
           {isLoggedIn ? (
             <>
