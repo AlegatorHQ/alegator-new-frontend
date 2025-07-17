@@ -25,11 +25,15 @@ const PALETTE = {
 
 export default function Dashboard() {
   const [tournaments, setTournaments] = useState<any[]>([]);
-  const [participatedTournaments, setParticipatedTournaments] = useState<any[]>([]);
+  const [participatedTournaments, setParticipatedTournaments] = useState<any[]>(
+    []
+  );
   const [username, setUsername] = useState("");
   const [userCode, setUserCode] = useState("");
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState<"created" | "participated">("created");
+  const [selectedTab, setSelectedTab] = useState<"created" | "participated">(
+    "created"
+  );
   const router = useRouter();
 
   useEffect(() => {
@@ -53,21 +57,31 @@ export default function Dashboard() {
         }
 
         // Torneos en los que participa el usuario
-        const { data: participantData, error: participantError } = await supabase
-          .from("tournament_participants")
-          .select("tournament_id, status")
-          .eq("user_id", user.id);
+        const { data: participantData, error: participantError } =
+          await supabase
+            .from("tournament_participants")
+            .select("tournament_id, status")
+            .eq("user_id", user.id);
 
-        if (!participantError && participantData && participantData.length > 0) {
-          const tournamentIds = participantData.map((p: any) => p.tournament_id);
-          const { data: tournamentsData, error: tournamentsError } = await supabase
-            .from("tournaments")
-            .select("*")
-            .in("id", tournamentIds);
+        if (
+          !participantError &&
+          participantData &&
+          participantData.length > 0
+        ) {
+          const tournamentIds = participantData.map(
+            (p: any) => p.tournament_id
+          );
+          const { data: tournamentsData, error: tournamentsError } =
+            await supabase
+              .from("tournaments")
+              .select("*")
+              .in("id", tournamentIds);
 
           if (!tournamentsError && tournamentsData) {
             const tournamentsWithStatus = tournamentsData.map((t) => {
-              const participant = participantData.find((p: any) => p.tournament_id === t.id);
+              const participant = participantData.find(
+                (p: any) => p.tournament_id === t.id
+              );
               return {
                 ...t,
                 status: participant?.status || "Pendiente",
@@ -104,10 +118,7 @@ export default function Dashboard() {
       <Navbar />
 
       <main className="flex-1 container mx-auto px-4 py-8">
-        <h1
-          className="text-4xl font-bold mb-8"
-          style={{ color: PALETTE.text }}
-        >
+        <h1 className="text-4xl font-bold mb-8" style={{ color: PALETTE.text }}>
           BIENVENIDO {username}
         </h1>
 
@@ -134,9 +145,7 @@ export default function Dashboard() {
               style={{ background: PALETTE.card, border: "none" }}
             >
               <CardHeader>
-                <CardTitle style={{ color: PALETTE.text }}>
-                  TU CUENTA
-                </CardTitle>
+                <CardTitle style={{ color: PALETTE.text }}>TU CUENTA</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -147,10 +156,16 @@ export default function Dashboard() {
                     <User className="text-white" size={24} />
                   </div>
                   <div>
-                    <p className="font-semibold" style={{ color: PALETTE.text }}>
+                    <p
+                      className="font-semibold"
+                      style={{ color: PALETTE.text }}
+                    >
                       {username}
                     </p>
-                    <p className="text-sm" style={{ color: PALETTE.textSecondary }}>
+                    <p
+                      className="text-sm"
+                      style={{ color: PALETTE.textSecondary }}
+                    >
                       Código: {userCode}
                     </p>
                   </div>
@@ -202,15 +217,11 @@ export default function Dashboard() {
                 <div className="flex flex-col gap-2">
                   <Button
                     className={`w-full flex items-center justify-between font-montserrat text-base sm:text-lg rounded-full py-2 px-8 transition ${
-                      selectedTab === "created"
-                        ? "font-bold"
-                        : ""
+                      selectedTab === "created" ? "font-bold" : ""
                     }`}
                     style={{
                       background:
-                        selectedTab === "created"
-                          ? PALETTE.text
-                          : PALETTE.card,
+                        selectedTab === "created" ? PALETTE.text : PALETTE.card,
                       color:
                         selectedTab === "created"
                           ? PALETTE.white
@@ -224,9 +235,7 @@ export default function Dashboard() {
                   </Button>
                   <Button
                     className={`w-full flex items-center justify-between font-montserrat text-base sm:text-lg rounded-full py-2 px-8 transition ${
-                      selectedTab === "participated"
-                        ? "font-bold"
-                        : ""
+                      selectedTab === "participated" ? "font-bold" : ""
                     }`}
                     style={{
                       background:
@@ -265,7 +274,10 @@ export default function Dashboard() {
                     Cargando...
                   </div>
                 ) : tournamentsToShow.length === 0 ? (
-                  <div className="text-center" style={{ color: PALETTE.textSecondary }}>
+                  <div
+                    className="text-center"
+                    style={{ color: PALETTE.textSecondary }}
+                  >
                     {selectedTab === "created"
                       ? "No has creado ningún torneo."
                       : "No has participado en ningún torneo."}
@@ -299,10 +311,16 @@ export default function Dashboard() {
                           {tournament.status === "Terminado" ? "T" : "P"}
                         </Badge>
                         <div>
-                          <p className="font-semibold" style={{ color: PALETTE.text }}>
+                          <p
+                            className="font-semibold"
+                            style={{ color: PALETTE.text }}
+                          >
                             {tournament.name}
                           </p>
-                          <p className="text-sm" style={{ color: PALETTE.textSecondary }}>
+                          <p
+                            className="text-sm"
+                            style={{ color: PALETTE.textSecondary }}
+                          >
                             {tournament.status || "Pendiente"}
                           </p>
                         </div>

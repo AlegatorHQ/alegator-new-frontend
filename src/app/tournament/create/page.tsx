@@ -64,20 +64,18 @@ export default function CreateTournament() {
 
     setLoading(true);
 
-    const { error: dbError } = await supabase
-      .from("tournaments")
-      .insert([
-        {
-          name: formData.name,
-          initials: formData.initials,
-          qualifiers: Number(formData.qualifiers),
-          eliminations: formData.eliminations,
-          location: formData.location,
-          date: formData.date,
-          team_ranking: formData.teamRanking,
-          judge_ranking: formData.judgeRanking,
-        },
-      ]);
+    const { error: dbError } = await supabase.from("tournaments").insert([
+      {
+        name: formData.name,
+        initials: formData.initials,
+        qualifiers: Number(formData.qualifiers),
+        eliminations: formData.eliminations,
+        location: formData.location,
+        date: formData.date,
+        team_ranking: formData.teamRanking,
+        judge_ranking: formData.judgeRanking,
+      },
+    ]);
 
     setLoading(false);
 
@@ -92,20 +90,18 @@ export default function CreateTournament() {
   // Demo handler
   const handleDemo = async () => {
     setLoading(true);
-    await supabase
-      .from("tournaments")
-      .insert([
-        {
-          name: "Torneo Demo",
-          initials: "DEMO",
-          qualifiers: 3,
-          eliminations: "Octavos",
-          location: "Demo City",
-          date: new Date().toISOString().slice(0, 10),
-          team_ranking: "General",
-          judge_ranking: "General",
-        },
-      ]);
+    await supabase.from("tournaments").insert([
+      {
+        name: "Torneo Demo",
+        initials: "DEMO",
+        qualifiers: 3,
+        eliminations: "Octavos",
+        location: "Demo City",
+        date: new Date().toISOString().slice(0, 10),
+        team_ranking: "General",
+        judge_ranking: "General",
+      },
+    ]);
     setLoading(false);
     router.push("/tournament/config");
   };
@@ -120,7 +116,11 @@ export default function CreateTournament() {
       <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center mt-24">
         <h1
           className="text-4xl font-bold mb-6 text-center"
-          style={{ color: PALETTE.text, fontFamily: "Montserrat, sans-serif", letterSpacing: "1px" }}
+          style={{
+            color: PALETTE.text,
+            fontFamily: "Montserrat, sans-serif",
+            letterSpacing: "1px",
+          }}
         >
           CREAR TORNEO NUEVO
         </h1>
@@ -128,14 +128,22 @@ export default function CreateTournament() {
         {/* Consejo y botón demo */}
         <div
           className="w-full max-w-xl rounded-lg mb-6 px-6 py-4"
-          style={{ background: "rgba(0,0,0,0.15)", color: PALETTE.textSecondary, fontSize: "1.1rem" }}
+          style={{
+            background: "rgba(0,0,0,0.15)",
+            color: PALETTE.textSecondary,
+            fontSize: "1.1rem",
+          }}
         >
-          <div className="font-bold mb-2" style={{ color: PALETTE.yellow, fontSize: "1rem" }}>
+          <div
+            className="font-bold mb-2"
+            style={{ color: PALETTE.yellow, fontSize: "1rem" }}
+          >
             Consejo:
           </div>
           <div className="mb-3" style={{ color: "#000", fontSize: "1rem" }}>
             ¿Eres nuevo en Alegator? Puedes crear un torneo de demostración que
-            esté con una configuración preestablecida de equipos, jueces y salas.
+            esté con una configuración preestablecida de equipos, jueces y
+            salas.
           </div>
           <Button
             style={{
@@ -165,13 +173,19 @@ export default function CreateTournament() {
         >
           <h2
             className="text-2xl font-bold text-center mb-2"
-            style={{ color: PALETTE.text, fontFamily: "Montserrat, sans-serif" }}
+            style={{
+              color: PALETTE.text,
+              fontFamily: "Montserrat, sans-serif",
+            }}
           >
             INGRESE LOS SIGUIENTES DATOS
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="name" style={{ color: PALETTE.text, fontSize: "1.1rem" }}>
+              <Label
+                htmlFor="name"
+                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
+              >
                 NOMBRE DE TORNEO
               </Label>
               <Input
@@ -194,7 +208,10 @@ export default function CreateTournament() {
               />
             </div>
             <div>
-              <Label htmlFor="initials" style={{ color: PALETTE.text, fontSize: "1.1rem" }}>
+              <Label
+                htmlFor="initials"
+                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
+              >
                 SIGLAS
               </Label>
               <Input
@@ -217,7 +234,10 @@ export default function CreateTournament() {
               />
             </div>
             <div>
-              <Label htmlFor="qualifiers" style={{ color: PALETTE.text, fontSize: "1.1rem" }}>
+              <Label
+                htmlFor="qualifiers"
+                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
+              >
                 N° DE CLASIFICATORIAS
               </Label>
               <Input
@@ -242,7 +262,10 @@ export default function CreateTournament() {
               />
             </div>
             <div>
-              <Label htmlFor="eliminations" style={{ color: PALETTE.text, fontSize: "1.1rem" }}>
+              <Label
+                htmlFor="eliminations"
+                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
+              >
                 ELIMINATORIAS
               </Label>
               <Select
@@ -275,7 +298,10 @@ export default function CreateTournament() {
               </Select>
             </div>
             <div>
-              <Label htmlFor="location" style={{ color: PALETTE.text, fontSize: "1.1rem" }}>
+              <Label
+                htmlFor="location"
+                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
+              >
                 LUGAR
               </Label>
               <Input
@@ -298,7 +324,10 @@ export default function CreateTournament() {
               />
             </div>
             <div>
-              <Label htmlFor="date" style={{ color: PALETTE.text, fontSize: "1.1rem" }}>
+              <Label
+                htmlFor="date"
+                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
+              >
                 FECHA
               </Label>
               <Input
@@ -322,7 +351,10 @@ export default function CreateTournament() {
               />
             </div>
             <div>
-              <Label htmlFor="teamRanking" style={{ color: PALETTE.text, fontSize: "1.1rem" }}>
+              <Label
+                htmlFor="teamRanking"
+                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
+              >
                 CLASIFICACIÓN DE EQUIPO
               </Label>
               <Select
@@ -354,7 +386,10 @@ export default function CreateTournament() {
               </Select>
             </div>
             <div>
-              <Label htmlFor="judgeRanking" style={{ color: PALETTE.text, fontSize: "1.1rem" }}>
+              <Label
+                htmlFor="judgeRanking"
+                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
+              >
                 CLASIFICACIÓN DE JUEZ
               </Label>
               <Select

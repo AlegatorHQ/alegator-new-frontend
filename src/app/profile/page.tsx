@@ -35,7 +35,9 @@ export default function ProfilePage() {
   const [confirmarPassword, setConfirmarPassword] = useState("");
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [participatedTournaments, setParticipatedTournaments] = useState<any[]>([]);
+  const [participatedTournaments, setParticipatedTournaments] = useState<any[]>(
+    []
+  );
 
   useEffect(() => {
     const supabase = createClient();
@@ -69,10 +71,11 @@ export default function ProfilePage() {
 
       if (!participantError && participantData && participantData.length > 0) {
         const tournamentIds = participantData.map((p: any) => p.tournament_id);
-        const { data: tournamentsData, error: tournamentsError } = await supabase
-          .from("tournaments")
-          .select("*")
-          .in("id", tournamentIds);
+        const { data: tournamentsData, error: tournamentsError } =
+          await supabase
+            .from("tournaments")
+            .select("*")
+            .in("id", tournamentIds);
 
         if (!tournamentsError && tournamentsData) {
           setParticipatedTournaments(tournamentsData);
