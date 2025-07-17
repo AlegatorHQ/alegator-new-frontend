@@ -32,7 +32,7 @@ const tournaments = [
     endDate: "2025-07-17T18:00:00",
     description: "Torneo amateur de padel en las canchas de césped.",
     image: "/hoja-verde-completa.png",
-    location: "Ciudad del Saber",
+    location: "Cancha de Padel, Boquete",
   },
   {
     id: 2,
@@ -41,7 +41,7 @@ const tournaments = [
     endDate: "2025-08-03T22:00:00",
     description: "Competencia online de League of Legends para la comunidad.",
     image: "/hoja-verde-completa.png",
-    location: "Hotel El Panamá",
+    location: "Virtual",
   },
   {
     id: 3,

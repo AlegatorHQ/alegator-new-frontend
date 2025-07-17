@@ -14,7 +14,7 @@ const events = [
     startDate: "2025-07-15T10:00:00",
     endDate: "2025-07-17T18:00:00",
     description: "Torneo amateur de padel en las canchas de césped.",
-    location: "Ciudad del Saber",
+    location: "Cancha de Padel, Boquete",
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const events = [
     startDate: "2025-08-01T15:00:00",
     endDate: "2025-08-03T22:00:00",
     description: "Competencia online de League of Legends para la comunidad.",
-    location: "Hotel El Panamá",
+    location: "Virtual",
   },
   {
     id: 3,
@@ -46,7 +46,7 @@ const events = [
     startDate: "2025-09-10T14:00:00",
     endDate: "2025-09-12T20:00:00",
     description: "Torneo de ajedrez para todas las edades y niveles.",
-    location: "Ciudad del Saber",
+    location: "Parque Cervantes",
   },
 ];
 
