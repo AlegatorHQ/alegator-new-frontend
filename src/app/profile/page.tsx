@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import Navbar from "@/app/(site)/Navbar"
-import Footer from "@/app/(site)/Footer"
-import { FormButton } from "@/components/ui/FormButton"
-import Image from "next/image"
-import { createClient } from "@/lib/supabase/client"
-import { EventCard } from "@/components/EventCard"
-import { LoadingScreen } from "@/components/LoadingScreen"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Navbar from "@/app/(site)/Navbar";
+import Footer from "@/app/(site)/Footer";
+import { FormButton } from "@/components/ui/FormButton";
+import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
+import { EventCard } from "@/components/EventCard";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 const avatars = [
   "/avatars/avatar1.png",
   "/avatars/avatar2.png",
   "/avatars/avatar3.png",
   "/avatars/avatar4.png",
-]
+];
 
 function maskEmail(email: string) {
-  const [name, domain] = email.split("@")
-  if (!name || !domain) return ""
-  if (name.length <= 2) return email
-  return `${name[0]}***${name[name.length - 1]}@${domain}`
+  const [name, domain] = email.split("@");
+  if (!name || !domain) return "";
+  if (name.length <= 2) return email;
+  return `${name[0]}***${name[name.length - 1]}@${domain}`;
 }
 
 const tournaments = [
@@ -55,45 +55,47 @@ const tournaments = [
 ];
 
 export default function ProfilePage() {
-  const router = useRouter()
-  const [nombre, setNombre] = useState("")
-  const [apellido, setApellido] = useState("")
-  const [username, setUsername] = useState("")
-  const [correo, setCorreo] = useState("")
-  const [avatar, setAvatar] = useState(avatars[0])
-  const [password, setPassword] = useState("")
-  const [confirmarPassword, setConfirmarPassword] = useState("")
-  const [showAvatarSelector, setShowAvatarSelector] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const router = useRouter();
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [username, setUsername] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [avatar, setAvatar] = useState(avatars[0]);
+  const [password, setPassword] = useState("");
+  const [confirmarPassword, setConfirmarPassword] = useState("");
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = createClient()
+    const supabase = createClient();
     const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
-        router.replace("/login")
-        return
+        router.replace("/login");
+        return;
       }
-      setCorreo(user.email || "")
-      setUsername(user.user_metadata?.username || "")
-      setNombre(user.user_metadata?.nombre || "")
-      setApellido(user.user_metadata?.apellido || "")
+      setCorreo(user.email || "");
+      setUsername(user.user_metadata?.username || "");
+      setNombre(user.user_metadata?.nombre || "");
+      setApellido(user.user_metadata?.apellido || "");
 
-      const storedProfile = localStorage.getItem("profileData")
+      const storedProfile = localStorage.getItem("profileData");
       if (storedProfile) {
-        const data = JSON.parse(storedProfile)
-        setAvatar(data.avatar || avatars[0])
-        setPassword(data.password || "")
-        setConfirmarPassword(data.confirmarPassword || "")
+        const data = JSON.parse(storedProfile);
+        setAvatar(data.avatar || avatars[0]);
+        setPassword(data.password || "");
+        setConfirmarPassword(data.confirmarPassword || "");
       }
-      setLoading(false)
-    }
-    fetchUser()
-  }, [router])
+      setLoading(false);
+    };
+    fetchUser();
+  }, [router]);
 
   const handleAvatarChange = (src: string) => {
-    setAvatar(src)
-    setShowAvatarSelector(false)
+    setAvatar(src);
+    setShowAvatarSelector(false);
     localStorage.setItem(
       "profileData",
       JSON.stringify({
@@ -105,8 +107,8 @@ export default function ProfilePage() {
         password,
         confirmarPassword,
       })
-    )
-  }
+    );
+  };
 
   const handleEditProfile = () => {
     router.push("/profile/edit");
@@ -147,9 +149,15 @@ export default function ProfilePage() {
               >
                 Cambiar avatar
               </button>
-              <div className="text-2xl font-bold text-[#11372A] mb-1 mt-4">{nombre} {apellido}</div>
-              <div className="text-[#8ca62e] font-semibold mb-2">{username}</div>
-              <div className="text-xs text-gray-500 mb-4">Usuario registrado</div>
+              <div className="text-2xl font-bold text-[#11372A] mb-1 mt-4">
+                {nombre} {apellido}
+              </div>
+              <div className="text-[#8ca62e] font-semibold mb-2">
+                {username}
+              </div>
+              <div className="text-xs text-gray-500 mb-4">
+                Usuario registrado
+              </div>
               {showAvatarSelector && (
                 <div className="absolute top-0 left-0 w-full h-full bg-black/60 flex items-center justify-center z-10">
                   <div className="bg-white p-6 rounded-xl flex gap-4 border border-[#11372A]">
@@ -176,7 +184,9 @@ export default function ProfilePage() {
             </div>
             {/* info de la cuenta */}
             <div className="bg-white rounded-2xl shadow-lg p-8 flex flex-col justify-center border border-[#11372A]">
-              <div className="text-[#11372A] text-xl font-bold mb-6">Información de la cuenta</div>
+              <div className="text-[#11372A] text-xl font-bold mb-6">
+                Información de la cuenta
+              </div>
               <div className="grid grid-cols-1 gap-4 text-base">
                 <div className="flex justify-between items-center">
                   <span className="text-[#11372A] font-semibold">Nombre</span>
@@ -192,7 +202,9 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[#11372A] font-semibold">Correo</span>
-                  <span className="font-bold text-[#8ca62e]">{maskEmail(correo)}</span>
+                  <span className="font-bold text-[#8ca62e]">
+                    {maskEmail(correo)}
+                  </span>
                 </div>
               </div>
               <div className="mt-8 flex flex-col gap-2">
@@ -214,7 +226,9 @@ export default function ProfilePage() {
           </div>
           {/* Torneos en los que participaste */}
           <div className="bg-white rounded-2xl shadow-lg p-6 mt-8 flex flex-col items-center border border-[#11372A] w-full">
-            <div className="text-[#11372A] font-bold mb-4 text-xl">Torneos en los que participaste</div>
+            <div className="text-[#11372A] font-bold mb-4 text-xl">
+              Torneos en los que participaste
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
               {tournaments.length > 0 ? (
                 tournaments.map((event) => (
@@ -239,5 +253,5 @@ export default function ProfilePage() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }

@@ -3,11 +3,14 @@ import Image from "next/image";
 import alegatorSVG from "@/assets/alegator3_sinfondo1.svg";
 
 interface LoadingScreenProps {
-  progress?: number; 
-  duration?: number; 
+  progress?: number;
+  duration?: number;
 }
 
-export function LoadingScreen({ progress = 100, duration = 1200 }: LoadingScreenProps) {
+export function LoadingScreen({
+  progress = 100,
+  duration = 1200,
+}: LoadingScreenProps) {
   const [internalProgress, setInternalProgress] = useState(0);
 
   useEffect(() => {
@@ -15,7 +18,10 @@ export function LoadingScreen({ progress = 100, duration = 1200 }: LoadingScreen
     let frame: number;
     function animate() {
       const elapsed = Date.now() - start;
-      const pct = Math.min(progress, Math.round((elapsed / duration) * progress));
+      const pct = Math.min(
+        progress,
+        Math.round((elapsed / duration) * progress)
+      );
       setInternalProgress(pct);
       if (pct < progress) {
         frame = requestAnimationFrame(animate);

@@ -1,52 +1,52 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import Navbar from '@/app/(site)/Navbar';
-import Footer from '@/app/(site)/Footer';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import Navbar from "@/app/(site)/Navbar";
+import Footer from "@/app/(site)/Footer";
+import Link from "next/link";
 
 // Sample event data (in a real app, you'd fetch this from an API)
 const events = [
   {
     id: 1,
-    name: 'Torneo de Padel',
-    startDate: '2025-07-15T10:00:00',
-    endDate: '2025-07-17T18:00:00',
-    description: 'Torneo amateur de padel en las canchas de césped.',
-    location: 'Presencial',
+    name: "Torneo de Padel",
+    startDate: "2025-07-15T10:00:00",
+    endDate: "2025-07-17T18:00:00",
+    description: "Torneo amateur de padel en las canchas de césped.",
+    location: "Presencial",
   },
   {
     id: 2,
-    name: 'Campeonato de League of Legends',
-    startDate: '2025-08-01T15:00:00',
-    endDate: '2025-08-03T22:00:00',
-    description: 'Competencia online de League of Legends para la comunidad.',
-    location: 'En línea',
+    name: "Campeonato de League of Legends",
+    startDate: "2025-08-01T15:00:00",
+    endDate: "2025-08-03T22:00:00",
+    description: "Competencia online de League of Legends para la comunidad.",
+    location: "En línea",
   },
   {
     id: 3,
-    name: 'Noche de Juegos de Mesa',
-    startDate: '2025-06-20T18:00:00',
-    endDate: '2025-06-20T23:00:00',
-    description: 'Una noche relajada con una gran variedad de juegos de mesa.',
-    location: 'Presencial',
+    name: "Noche de Juegos de Mesa",
+    startDate: "2025-06-20T18:00:00",
+    endDate: "2025-06-20T23:00:00",
+    description: "Una noche relajada con una gran variedad de juegos de mesa.",
+    location: "Presencial",
   },
   {
     id: 4,
-    name: 'Maratón de Programación',
-    startDate: '2025-07-15T09:00:00',
-    endDate: '2025-07-16T09:00:00',
-    description: 'Hackathon de 24 horas para desarrollar nuevas aplicaciones.',
-    location: 'En línea',
+    name: "Maratón de Programación",
+    startDate: "2025-07-15T09:00:00",
+    endDate: "2025-07-16T09:00:00",
+    description: "Hackathon de 24 horas para desarrollar nuevas aplicaciones.",
+    location: "En línea",
   },
   {
     id: 5,
-    name: 'Torneo de Ajedrez',
-    startDate: '2025-09-10T14:00:00',
-    endDate: '2025-09-12T20:00:00',
-    description: 'Torneo de ajedrez para todas las edades y niveles.',
-    location: 'Presencial',
+    name: "Torneo de Ajedrez",
+    startDate: "2025-09-10T14:00:00",
+    endDate: "2025-09-12T20:00:00",
+    description: "Torneo de ajedrez para todas las edades y niveles.",
+    location: "Presencial",
   },
 ];
 
@@ -79,16 +79,19 @@ export default function EventDetailPage() {
     );
   }
 
-  const formattedStartDate = new Date(event.startDate).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  const formattedStartDate = new Date(event.startDate).toLocaleDateString(
+    "es-ES",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }
+  );
 
-  const formattedEndDate = new Date(event.endDate).toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  const formattedEndDate = new Date(event.endDate).toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   return (
@@ -109,8 +112,12 @@ export default function EventDetailPage() {
 
           {/* Description */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Descripción del Evento</h2>
-            <p className="text-gray-600 whitespace-pre-line">{event.description}</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              Descripción del Evento
+            </h2>
+            <p className="text-gray-600 whitespace-pre-line">
+              {event.description}
+            </p>
           </div>
 
           {/* Action Buttons */}

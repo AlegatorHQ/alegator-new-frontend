@@ -41,10 +41,7 @@ export default function Footer({ showIvan = false }: FooterProps) {
             <span>Teléfono:</span>
             <span>777-7777</span>
             <span className="mt-2">Correo:</span>
-            <a
-              href="mailto:info@alegator.app"
-              className="hover:underline"
-            >
+            <a href="mailto:info@alegator.app" className="hover:underline">
               info@alegator.app
             </a>
           </div>

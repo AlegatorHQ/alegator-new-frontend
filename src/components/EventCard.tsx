@@ -16,7 +16,19 @@ interface EventCardProps {
 }
 
 const EventCard = React.forwardRef<HTMLDivElement, EventCardProps>(
-  ({ id, name, startDate, endDate, description, location, className, ...props }, ref) => {
+  (
+    {
+      id,
+      name,
+      startDate,
+      endDate,
+      description,
+      location,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const formattedStartDate = new Date(startDate).toLocaleDateString("es-ES", {
       year: "numeric",
       month: "numeric",

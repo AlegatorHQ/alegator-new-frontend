@@ -43,7 +43,7 @@ const events = [
     image: "/hoja-verde-completa.png",
     location: "En línea",
   },
-    {
+  {
     id: 5,
     name: "Torneo de Ajedrez",
     startDate: "2025-09-10T14:00:00",
@@ -76,27 +76,54 @@ export default function EventsPage() {
         locationFilter === "todos" || event.location === locationFilter;
 
       const matchesDate = (() => {
-        if (dateFilter === 'all') return true;
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const eventStartDay = new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate());
+        if (dateFilter === "all") return true;
+        const today = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate()
+        );
+        const eventStartDay = new Date(
+          eventStartDate.getFullYear(),
+          eventStartDate.getMonth(),
+          eventStartDate.getDate()
+        );
 
         switch (dateFilter) {
-          case 'today':
+          case "today":
             return eventStartDay.getTime() === today.getTime();
-          case 'this_week':
+          case "this_week":
             const firstDayOfWeek = new Date(today);
             firstDayOfWeek.setDate(today.getDate() - today.getDay());
             const lastDayOfWeek = new Date(firstDayOfWeek);
             lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
-            return eventStartDay >= firstDayOfWeek && eventStartDay <= lastDayOfWeek;
-          case 'this_month':
-            return eventStartDate.getFullYear() === today.getFullYear() && eventStartDate.getMonth() === today.getMonth();
-          case 'previous_month':
-            const previousMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-            return eventStartDate.getFullYear() === previousMonth.getFullYear() && eventStartDate.getMonth() === previousMonth.getMonth();
-          case 'next_month':
-            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-            return eventStartDate.getFullYear() === nextMonth.getFullYear() && eventStartDate.getMonth() === nextMonth.getMonth();
+            return (
+              eventStartDay >= firstDayOfWeek && eventStartDay <= lastDayOfWeek
+            );
+          case "this_month":
+            return (
+              eventStartDate.getFullYear() === today.getFullYear() &&
+              eventStartDate.getMonth() === today.getMonth()
+            );
+          case "previous_month":
+            const previousMonth = new Date(
+              today.getFullYear(),
+              today.getMonth() - 1,
+              1
+            );
+            return (
+              eventStartDate.getFullYear() === previousMonth.getFullYear() &&
+              eventStartDate.getMonth() === previousMonth.getMonth()
+            );
+          case "next_month":
+            const nextMonth = new Date(
+              today.getFullYear(),
+              today.getMonth() + 1,
+              1
+            );
+            return (
+              eventStartDate.getFullYear() === nextMonth.getFullYear() &&
+              eventStartDate.getMonth() === nextMonth.getMonth()
+            );
           default:
             return true;
         }
@@ -118,7 +145,10 @@ export default function EventsPage() {
       }
     });
 
-    return eventsToList.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+    return eventsToList.sort(
+      (a, b) =>
+        new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+    );
   }, [searchQuery, locationFilter, dateFilter, activeCategory]);
 
   const getCategoryTitle = () => {

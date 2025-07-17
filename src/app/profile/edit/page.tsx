@@ -29,7 +29,9 @@ export default function EditProfilePage() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         router.replace("/login");
         return;
@@ -56,7 +58,7 @@ export default function EditProfilePage() {
 
     // Actualizar username
     const { error: metaError } = await supabase.auth.updateUser({
-      data: { username }
+      data: { username },
     });
 
     if (metaError) {

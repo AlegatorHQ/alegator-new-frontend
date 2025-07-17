@@ -1,7 +1,8 @@
-import * as React from "react"
+import * as React from "react";
 
-export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
-  children: React.ReactNode
+export interface LabelProps
+  extends React.LabelHTMLAttributes<HTMLLabelElement> {
+  children: React.ReactNode;
 }
 
 const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
@@ -14,8 +15,8 @@ const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
       {children}
     </label>
   )
-)
+);
 
-Label.displayName = "Label"
+Label.displayName = "Label";
 
-export { Label }
+export { Label };

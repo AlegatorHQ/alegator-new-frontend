@@ -47,7 +47,8 @@ export default function Page() {
       name: "Torneo Nacional de Debate",
       startDate: "2025-08-10",
       endDate: "2025-08-12",
-      description: "El torneo más grande del año para debatientes de todo el país.",
+      description:
+        "El torneo más grande del año para debatientes de todo el país.",
       location: "Ciudad de México",
     },
     {
@@ -55,7 +56,8 @@ export default function Page() {
       name: "Torneo Universitario",
       startDate: "2025-09-05",
       endDate: "2025-09-07",
-      description: "Competencia interuniversitaria para fomentar el debate académico.",
+      description:
+        "Competencia interuniversitaria para fomentar el debate académico.",
       location: "Monterrey",
     },
     {
@@ -304,14 +306,24 @@ export default function Page() {
                 <button
                   onClick={() => {
                     const container = carouselRef.current;
-                    if (container) container.scrollBy({ left: -scrollByAmount, behavior: "smooth" });
+                    if (container)
+                      container.scrollBy({
+                        left: -scrollByAmount,
+                        behavior: "smooth",
+                      });
                   }}
                   aria-label="Anterior"
                   className="hidden md:flex items-center justify-center bg-[#133c2b] absolute left-0 top-1/2 -translate-y-1/2 rounded-full w-16 h-16 z-10 shadow-lg hover:bg-[#0e2a1f] transition"
                   style={{ boxShadow: "0 4px 16px #133c2b33" }}
                 >
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                    <path d="M15 19l-7-7 7-7" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path
+                      d="M15 19l-7-7 7-7"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </button>
               )}
@@ -327,7 +339,7 @@ export default function Page() {
                   msOverflowStyle: "none",
                 }}
               >
-                {eventos.map(evento => (
+                {eventos.map((evento) => (
                   <div
                     key={evento.id}
                     className="flex-shrink-0 w-[320px] sm:w-[350px] md:w-[400px] scroll-snap-align-start"
@@ -348,14 +360,24 @@ export default function Page() {
                 <button
                   onClick={() => {
                     const container = carouselRef.current;
-                    if (container) container.scrollBy({ left: scrollByAmount, behavior: "smooth" });
+                    if (container)
+                      container.scrollBy({
+                        left: scrollByAmount,
+                        behavior: "smooth",
+                      });
                   }}
                   aria-label="Siguiente"
                   className="flex items-center justify-center bg-[#133c2b] absolute right-0 top-1/2 -translate-y-1/2 rounded-full w-16 h-16 z-10 shadow-lg hover:bg-[#0e2a1f] transition"
                   style={{ boxShadow: "0 4px 16px #133c2b33" }}
                 >
                   <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                    <path d="M9 5l7 7-7 7" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path
+                      d="M9 5l7 7-7 7"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </button>
               )}
@@ -368,7 +390,7 @@ export default function Page() {
             </button>
           </div>
         </section>
-        
+
         {/* Sección Sobre Nosotros */}
         <section
           ref={sobreNosotrosRef}
