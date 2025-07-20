@@ -89,101 +89,101 @@ export default function TournamentFeedback() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden">
-      {/* Navbar solo en mobile */}
-      {isMobile && <Navbar items={sidebarItems} />}
+  <div className="min-h-screen flex flex-col overflow-x-hidden">
+    {/* Navbar solo en mobile */}
+    {isMobile && <Navbar items={sidebarItems} />}
 
+    <div className="flex flex-1 pt-20 md:pt-0">
       {/* Sidebar solo en desktop */}
-      <div className="flex flex-1 pt-20 md:pt-0">
-        <div className="hidden md:block">
-          <Sidebar />
-        </div>
-        <div className="flex-1 flex flex-col">
-          <main className="flex-1 p-2 md:p-8">
-            <h1 className="text-4xl font-bold text-green-800 mb-8 text-center">
-              FEEDBACK
-            </h1>
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
 
-            <div className="w-full md:max-w-6xl md:mx-auto px-2 md:px-0">
-              {/* Search and Filter */}
-              <div className="flex gap-4 mb-6 flex-wrap">
-                <div className="flex-1 relative min-w-[180px]">
-                  <Search
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                    size={20}
-                  />
-                  <Input
-                    placeholder="Buscar feedback..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-white rounded-full"
-                  />
-                </div>
-                <Button className="bg-green-800 text-white hover:bg-green-700 flex items-center gap-2 rounded-lg min-w-[100px]">
-                  <Filter size={16} />
-                  Filtro
-                </Button>
+      <div className="flex-1 flex flex-col">
+        <main className="flex-1 p-2 md:p-8">
+          <h1 className="text-4xl font-bold text-green-800 mb-8 text-center">
+            FEEDBACK
+          </h1>
+
+          <div className="w-full md:max-w-6xl md:mx-auto px-2 md:px-0">
+            {/* Search and Filter */}
+            <div className="flex gap-4 mb-6 flex-wrap">
+              <div className="flex-1 relative min-w-[180px]">
+                <Search
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
+                <Input
+                  placeholder="Buscar feedback..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-white rounded-full"
+                />
               </div>
+              <Button className="bg-green-800 text-white hover:bg-green-700 flex items-center gap-2 rounded-lg min-w-[100px]">
+                <Filter size={16} />
+                Filtro
+              </Button>
+            </div>
 
-              {/* Feedback Table */}
-              <Card className="bg-white/90 backdrop-blur">
-                <CardContent className="p-0">
-                  <div className="overflow-x-auto w-full">
-                    <table className="w-full">
-                      <thead className="bg-green-800 text-white">
-                        <tr>
-                          <th className="p-2 md:p-4 text-left font-semibold">
-                            Dirigido a
-                          </th>
-                          <th className="p-2 md:p-4 text-left font-semibold">
-                            Autor
-                          </th>
-                          <th className="p-2 md:p-4 text-left font-semibold">
-                            Fecha
-                          </th>
-                          <th className="p-2 md:p-4 text-center font-semibold">
-                            Acción
-                          </th>
+            {/* Feedback Table */}
+            <Card className="bg-white/90 backdrop-blur">
+              <CardContent className="p-0">
+                <div className="overflow-x-auto w-full">
+                  <table className="w-full">
+                    <thead className="bg-green-800 text-white">
+                      <tr>
+                        <th className="p-2 md:p-4 text-left font-semibold">
+                          Dirigido a
+                        </th>
+                        <th className="p-2 md:p-4 text-left font-semibold">
+                          Autor
+                        </th>
+                        <th className="p-2 md:p-4 text-left font-semibold">
+                          Fecha
+                        </th>
+                        <th className="p-2 md:p-4 text-center font-semibold">
+                          Acción
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredFeedback.map((entry, index) => (
+                        <tr
+                          key={entry.id}
+                          className={`border-b ${
+                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          } hover:bg-gray-100`}
+                        >
+                          <td className="p-2 md:p-4">
+                            <div className="flex items-center gap-2">
+                              <User size={16} className="text-gray-600" />
+                              <span className="font-medium">
+                                {entry.dirigidoA}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="p-2 md:p-4">
+                            <div className="flex items-center gap-2">
+                              <User size={16} className="text-gray-600" />
+                              <span className="font-medium">{entry.autor}</span>
+                            </div>
+                          </td>
+                          <td className="p-2 md:p-4 text-gray-700">
+                            {entry.fecha}
+                          </td>
+                          <td className="p-2 md:p-4 text-center">
+                            <Button
+                              variant="link"
+                              className="text-green-800 hover:text-green-600 font-semibold underline"
+                            >
+                              Ver más
+                            </Button>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {filteredFeedback.map((entry, index) => (
-                          <tr
-                            key={entry.id}
-                            className={`border-b ${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100`}
-                          >
-                            <td className="p-2 md:p-4">
-                              <div className="flex items-center gap-2">
-                                <User size={16} className="text-gray-600" />
-                                <span className="font-medium">
-                                  {entry.dirigidoA}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="p-2 md:p-4">
-                              <div className="flex items-center gap-2">
-                                <User size={16} className="text-gray-600" />
-                                <span className="font-medium">
-                                  {entry.autor}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="p-2 md:p-4 text-gray-700">
-                              {entry.fecha}
-                            </td>
-                            <td className="p-2 md:p-4 text-center">
-                              <Button
-                                variant="link"
-                                className="text-green-800 hover:text-green-600 font-semibold underline"
-                              >
-                                Ver más
-                              </Button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
 
                   {filteredFeedback.length === 0 && (
                     <div className="text-center py-8 text-gray-500">
@@ -191,13 +191,14 @@ export default function TournamentFeedback() {
                       la búsqueda.
                     </div>
                   )}
-                </CardContent>
-              </Card>
-            </div>
-          </main>
-        </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
       </div>
-      <Footer />
     </div>
+    <Footer />
+  </div>
   );
-}
+};

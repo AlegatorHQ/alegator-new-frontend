@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, Users, UserCheck } from "lucide-react";
-import { Sidebar } from "@/app/(site)/AdminSidebar";
+import { Sidebar } from "@/components/sidebar";
 import Footer from "@/app/(site)/Footer";
 
 export default function TournamentParticipants() {

@@ -75,16 +75,44 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(cachedSession ?? false);
 
+  const supabase = createClient();
+
   useEffect(() => {
     setupSessionListener();
     const unsubscribe = subscribeSession(setIsLoggedIn);
     return unsubscribe;
   }, []);
 
-  const handleLogout = async () => {
-    const supabase = createClient();
+  const handleSignOut = async () => {
+    try {
+      const refreshToken = localStorage.getItem("django_refresh_token");
+
+      // 1. Logout from Django backend to blacklist the token
+      if (refreshToken) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ refresh: refreshToken }),
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Error logging out from Django backend:", error);
+      // We can still proceed with the rest of the logout process
+    }
+
+    // 2. Sign out from Supabase
     await supabase.auth.signOut();
-    setIsLoggedIn(false);
+
+    // 3. Clear Django tokens from localStorage
+    localStorage.removeItem("django_access_token");
+    localStorage.removeItem("django_refresh_token");
+
+    // 4. Redirect to login page
     window.location.href = "/login";
   };
 
@@ -141,7 +169,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
                 </svg>
               </Link>
               <button
-                onClick={handleLogout}
+                onClick={handleSignOut}
                 className="ml-4 hidden md:flex items-center justify-center bg-transparent hover:bg-[#1e5943] rounded-full p-2 transition"
                 title="Cerrar sesión"
               >
@@ -210,7 +238,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
                   PERFIL
                 </Link>
                 <button
-                  onClick={handleLogout}
+                  onClick={handleSignOut}
                   className="w-full text-white font-bold text-lg py-2 rounded-full bg-[#630000] hover:bg-[#630000] transition mt-2"
                 >
                   CERRAR SESIÓN

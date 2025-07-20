@@ -45,7 +45,7 @@ const Step2JudgeDetails = ({
   const {
     register,
     handleSubmit,
-    formState: {},
+    formState: { errors },
   } = useForm();
   return (
     <div className="bg-white p-8 rounded-lg shadow-md">

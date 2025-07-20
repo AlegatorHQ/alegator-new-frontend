@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, Trophy, Filter } from "lucide-react";
-import { Sidebar } from "@/app/(site)/AdminSidebar";
+import { Sidebar } from "@/components/sidebar";
 import Footer from "@/app/(site)/Footer";
 
 export default function TournamentClassification() {
