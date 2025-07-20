@@ -12,7 +12,7 @@ import PasswordIcon from "@/assets/password-icon.svg";
 import ivanNoTextSVG from "@/assets/alegator3_sinfondo1.svg";
 import EyeIcon from "@/assets/eye.svg";
 import EyeOffIcon from "@/assets/eye-off.svg";
-import { toast } from "react-hot-toast";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -22,11 +22,15 @@ export function LoginForm() {
   const [showReset, setShowReset] = useState(false);
   const [resetMessage, setResetMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setShowLoading(true); // Mostrar loading solo al hacer login
+    setResetMessage("");
+
     try {
       // 1. Sign in with Supabase to get the access token
       const { data: supabaseData, error: supabaseError } =
@@ -35,9 +39,13 @@ export function LoginForm() {
           password,
         });
 
-      if (supabaseError) {
-        toast.error(supabaseError.message);
-        return;
+      if (error) {
+        setResetMessage("Usuario o contraseña incorrectos.");
+        setShowLoading(false); // Ocultar loading si hay error
+      } else {
+        setTimeout(() => {
+          router.push("/");
+        }, 900);
       }
 
       const supabaseAccessToken = supabaseData?.session?.access_token;
@@ -76,7 +84,8 @@ export function LoginForm() {
       router.refresh();
       router.push("/");
     } catch (error) {
-      toast.error((error as Error).message);
+      setResetMessage("Error al iniciar sesión");
+      setShowLoading(false);
     }
   };
 
@@ -92,6 +101,10 @@ export function LoginForm() {
     }
     setLoading(false);
   };
+
+  if (showLoading) {
+    return <LoadingScreen progress={100} duration={900} />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen px-1 py-4 sm:px-2 bg-transparent">

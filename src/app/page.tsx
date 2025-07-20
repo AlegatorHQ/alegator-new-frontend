@@ -4,9 +4,12 @@ import Footer from "@/app/(site)/Footer";
 import Navbar from "@/app/(site)/Navbar";
 import CheckoutButton from "@/components/CheckoutButton";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { EventCard } from "@/components/EventCard";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const bienvenidaRef = useRef<HTMLDivElement | null>(null);
   const eventosRef = useRef<HTMLDivElement | null>(null);
   const sobreNosotrosRef = useRef<HTMLDivElement | null>(null);
@@ -14,6 +17,58 @@ export default function Page() {
   const [hovered, setHovered] = useState<
     null | "bienvenida" | "eventos" | "nosotros"
   >(null);
+  // Carrusel
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = carouselRef.current;
+      if (!el) return;
+      setCanScrollLeft(el.scrollLeft > 0);
+      setCanScrollRight(el.scrollLeft + el.offsetWidth < el.scrollWidth - 1);
+    };
+    const el = carouselRef.current;
+    if (el) {
+      el.addEventListener("scroll", handleScroll);
+      handleScroll();
+    }
+    return () => {
+      if (el) el.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollByAmount = 400;
+
+  const eventos = [
+    {
+      id: 1,
+      name: "Torneo Nacional de Debate",
+      startDate: "2025-08-10",
+      endDate: "2025-08-12",
+      description:
+        "El torneo más grande del año para debatientes de todo el país.",
+      location: "Virtual",
+    },
+    {
+      id: 2,
+      name: "Torneo Universitario",
+      startDate: "2025-09-05",
+      endDate: "2025-09-07",
+      description:
+        "Competencia interuniversitaria para fomentar el debate académico.",
+      location: "Centro Regional de Chiriquí, UTP",
+    },
+    {
+      id: 3,
+      name: "Torneo Escolar",
+      startDate: "2025-10-15",
+      endDate: "2025-10-16",
+      description: "Torneo para estudiantes de secundaria y preparatoria.",
+      location: "Hotel El Panamá",
+    },
+  ];
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
@@ -233,10 +288,7 @@ export default function Page() {
               w-[120px] sm:w-[180px] md:w-[220px] lg:w-[350px] xl:w-[500px]"
           />
           {/* Contenido */}
-          <div
-            className="relative z-20 flex flex-col items-center w-full max-w-lg md:max-w-4xl
-            [@media(max-width:825px)]:items-center [@media(max-width:825px)]:text-center"
-          >
+          <div className="relative z-20 flex flex-col items-center w-full max-w-lg md:max-w-4xl">
             <h2 className="text-white text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-2 font-montserrat text-center">
               NUESTROS PRÓXIMOS EVENTOS
             </h2>
@@ -247,12 +299,94 @@ export default function Page() {
             <h3 className="text-white text-xl sm:text-3xl font-extrabold mb-8 font-montserrat text-center">
               ¡INSCRÍBETE YA!
             </h3>
-            {/* Cards de eventos */}
-            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-6 mb-8 w-full">
-              {/* <EventCard ... /> */}
+            {/* Carrusel de EventCard */}
+            <div className="w-full relative mb-8">
+              {/* Flecha izquierda */}
+              {canScrollLeft && (
+                <button
+                  onClick={() => {
+                    const container = carouselRef.current;
+                    if (container)
+                      container.scrollBy({
+                        left: -scrollByAmount,
+                        behavior: "smooth",
+                      });
+                  }}
+                  aria-label="Anterior"
+                  className="hidden md:flex items-center justify-center bg-[#133c2b] absolute left-0 top-1/2 -translate-y-1/2 rounded-full w-16 h-16 z-10 shadow-lg hover:bg-[#0e2a1f] transition"
+                  style={{ boxShadow: "0 4px 16px #133c2b33" }}
+                >
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M15 19l-7-7 7-7"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              )}
+              {/* Carrusel horizontal */}
+              <div
+                ref={carouselRef}
+                id="event-carousel"
+                className="flex gap-6 overflow-x-auto px-2 md:px-8 py-2 scrollbar-hide"
+                style={{
+                  scrollSnapType: "x mandatory",
+                  WebkitOverflowScrolling: "touch",
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
+              >
+                {eventos.map((evento) => (
+                  <div
+                    key={evento.id}
+                    className="flex-shrink-0 w-[320px] sm:w-[350px] md:w-[400px] scroll-snap-align-start"
+                  >
+                    <EventCard
+                      id={evento.id}
+                      name={evento.name}
+                      startDate={evento.startDate}
+                      endDate={evento.endDate}
+                      description={evento.description}
+                      location={evento.location}
+                    />
+                  </div>
+                ))}
+              </div>
+              {/* Flecha derecha */}
+              {canScrollRight && (
+                <button
+                  onClick={() => {
+                    const container = carouselRef.current;
+                    if (container)
+                      container.scrollBy({
+                        left: scrollByAmount,
+                        behavior: "smooth",
+                      });
+                  }}
+                  aria-label="Siguiente"
+                  className="flex items-center justify-center bg-[#133c2b] absolute right-0 top-1/2 -translate-y-1/2 rounded-full w-16 h-16 z-10 shadow-lg hover:bg-[#0e2a1f] transition"
+                  style={{ boxShadow: "0 4px 16px #133c2b33" }}
+                >
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M9 5l7 7-7 7"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              )}
             </div>
-            <button className="bg-white border-2 border-[#133c2b] text-[#133c2b] font-bold py-2 px-8 rounded-full text-base sm:text-lg font-montserrat hover:bg-[#e6e6e6] transition">
-              Ver Torneos
+            <button
+              className="bg-white border-2 border-[#133c2b] text-[#133c2b] font-bold py-2 px-8 rounded-full text-base sm:text-lg font-montserrat hover:bg-[#e6e6e6] transition"
+              onClick={() => router.push("/events")}
+            >
+              Ver Eventos
             </button>
           </div>
         </section>

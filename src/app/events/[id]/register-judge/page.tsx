@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import RegistrationForm from "@/components/RegistrationForm";
 import Navbar from "@/app/(site)/Navbar";
 import Footer from "@/app/(site)/Footer";

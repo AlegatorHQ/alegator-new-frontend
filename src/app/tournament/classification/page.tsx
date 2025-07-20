@@ -121,8 +121,8 @@ export default function TournamentClassification() {
           </h1>
 
           <div className="max-w-6xl mx-auto">
-            <Card className="bg-white/80 backdrop-blur">
-              <CardContent className="p-6">
+            <div className="bg-white/80 backdrop-blur rounded-xl shadow-lg">
+              <div className="p-6">
                 {/* Search and Filter */}
                 <div className="flex gap-4 mb-6">
                   <div className="flex-1 relative">
@@ -187,8 +187,8 @@ export default function TournamentClassification() {
                     búsqueda.
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </main>
 
