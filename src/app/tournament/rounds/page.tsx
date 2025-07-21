@@ -1,128 +1,146 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sidebar } from "@/app/(site)/AdminSidebar";
+import { useState } from "react"
+import { Sidebar } from "@/components/sidebar"
+import { StepIndicator } from "@/components/step-indicator"
+import { RoundSelection } from "@/components/round-selection"
+import { CheckIn } from "@/components/check-in"
+import { DrawGeneration } from "@/components/draw-generation"
+import { MotionUpload } from "@/components/motion-upload"
+import { BallotSubmission } from "@/components/ballot-submission"
+import { ResultPublication } from "@/components/result-publication"
+import { useTournament } from "@/hooks/useTournament"
+import { RoundHeader } from "@/components/round-header"
 import Footer from "@/app/(site)/Footer";
 
-const roundSteps = [
-  { number: 1, label: "CHECK IN", status: "completed" },
-  { number: 2, label: "DRAW", status: "completed" },
-  { number: 3, label: "SUBIR MOCIÓN", status: "current" },
-  { number: 4, label: "BALLOTS", status: "pending" },
-  { number: 5, label: "RESULTADOS", status: "pending" },
-];
+const stepLabels = ["Selección", "Check-in", "Emparejamientos", "Moción", "Votación", "Resultados"]
 
-const teams = ["Equipo1", "Equipo1", "Equipo1"];
-const judges = ["Juez1", "Juez1", "Juez1"];
+export default function TournamentApp() {
+  const [activeSection, setActiveSection] = useState("rondas")
+  const {
+    tournament,
+    selectedRound,
+    currentStep,
+    selectRound,
+    updateRoundStep,
+    toggleTeamCheckIn,
+    toggleJudgeCheckIn,
+    generateDraw,
+    uploadMotion,
+    submitBallot,
+    publishResults,
+    returnToRoundSelection,
+  } = useTournament()
 
-export default function TournamentRounds() {
+  const handleBackToRounds = () => {
+    returnToRoundSelection()
+  }
+
+  const handleNextStep = () => {
+    if (currentStep < 6) {
+      updateRoundStep(currentStep + 1)
+    }
+  }
+
+  const handleCheckInComplete = () => {
+    // Automatically advance to Draw Generation after check-in
+    updateRoundStep(3)
+  }
+
+  const handleDrawComplete = () => {
+    // Automatically advance to Motion Upload after draw generation
+    updateRoundStep(4)
+  }
+
+  const handleMotionComplete = () => {
+    // Automatically advance to Ballot Submission after motion upload
+    updateRoundStep(5)
+  }
+
+  const handleBallotsComplete = () => {
+    // Automatically advance to Result Publication after all ballots submitted
+    updateRoundStep(6)
+  }
+
+  const renderCurrentStep = () => {
+    if (!selectedRound) {
+      return <RoundSelection tournament={tournament} onRoundSelect={selectRound} />
+    }
+
+    switch (currentStep) {
+      case 2:
+        return (
+          <CheckIn
+            tournament={tournament}
+            onTeamCheckIn={toggleTeamCheckIn}
+            onJudgeCheckIn={toggleJudgeCheckIn}
+            onNext={handleCheckInComplete}
+          />
+        )
+      case 3:
+        return <DrawGeneration round={selectedRound} onGenerateDraw={generateDraw} onNext={handleDrawComplete} />
+      case 4:
+        return <MotionUpload round={selectedRound} onUploadMotion={uploadMotion} onNext={handleMotionComplete} />
+      case 5:
+        return <BallotSubmission round={selectedRound} onSubmitBallot={submitBallot} onNext={handleBallotsComplete} />
+      case 6:
+        return (
+          <ResultPublication
+            round={selectedRound}
+            onPublishResults={() => {
+              publishResults()
+              returnToRoundSelection()
+            }}
+            onBackToRounds={handleBackToRounds}
+          />
+        )
+      default:
+        return <RoundSelection tournament={tournament} onRoundSelect={selectRound} />
+    }
+  }
+
+  if (activeSection !== "rondas") {
+    return (
+      <div className="flex h-screen bg-[#f5f5f5]">
+        <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-[#333333] mb-4">Sección en Desarrollo</h2>
+            <p className="text-[#7a8174]">Esta sección estará disponible próximamente</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen flex">
-      <Sidebar />
+    <div className="flex h-screen bg-[#ADBC9F]">
+      <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
 
-      <div className="flex-1 flex flex-col">
-        <main className="flex-1 p-8">
-          <h1 className="text-4xl font-bold text-green-800 mb-8 text-center">
-            RONDAS
-          </h1>
-
-          {/* Round Progress */}
-          <div className="flex justify-center mb-8">
-            <div className="flex items-center gap-4">
-              {roundSteps.map((step, index) => (
-                <div key={step.number} className="flex items-center">
-                  <div className="text-center">
-                    <div
-                      className={`w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold ${
-                        step.status === "completed"
-                          ? "bg-yellow-400 text-black"
-                          : step.status === "current"
-                            ? "bg-green-800 text-white"
-                            : "bg-green-800 text-white"
-                      }`}
-                    >
-                      {step.number}
-                    </div>
-                    <div className="mt-2 text-sm font-semibold text-green-800">
-                      {step.label}
-                    </div>
-                  </div>
-                  {index < roundSteps.length - 1 && (
-                    <div className="w-8 h-1 bg-green-800 mx-2"></div>
-                  )}
-                </div>
-              ))}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        {selectedRound ? (
+          <RoundHeader round={selectedRound} currentStep={currentStep} onBackToRounds={handleBackToRounds} />
+        ) : (
+          <header className="bg-white border-b border-[#d9d9d9] px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-[#11372a]">RONDAS</h1>
+                <p className="text-[#7a8174]">Gestión de Torneo</p>
+              </div>
             </div>
+          </header>
+        )}
+
+        {/* Step Indicator */}
+        {selectedRound && (
+          <div className="bg-white border-b border-[#d9d9d9] px-6 py-4">
+            <StepIndicator currentStep={currentStep} totalSteps={6} stepLabels={stepLabels} />
           </div>
-
-          {/* Action Buttons */}
-          <div className="flex justify-center gap-4 mb-8">
-            <Button className="alegator-button text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600">
-              Editar Draw
-            </Button>
-            <Button className="alegator-button text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600">
-              Publicar Draw
-            </Button>
-            <Button className="alegator-button text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600">
-              Subir Moción
-            </Button>
-          </div>
-
-          {/* Round 1 Details */}
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-green-800 mb-6 text-center">
-              RONDA 1
-            </h2>
-
-            <Card className="bg-white/80 backdrop-blur">
-              <CardHeader>
-                <CardTitle className="text-green-800 text-center text-2xl">
-                  Enfrentamiento: Ronda 1
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-8">
-                  {/* Teams Check-in */}
-                  <div className="text-center">
-                    <h3 className="text-xl font-semibold text-green-800 mb-4">
-                      Check-In de Equipos
-                    </h3>
-                    <div className="space-y-2 mb-6">
-                      {teams.map((team, index) => (
-                        <div key={index} className="text-gray-700">
-                          {team}
-                        </div>
-                      ))}
-                    </div>
-                    <Button className="bg-green-800 text-white hover:bg-green-700 font-semibold">
-                      VER EQUIPOS
-                    </Button>
-                  </div>
-
-                  {/* Judges Check-in */}
-                  <div className="text-center border-l border-gray-300 pl-8">
-                    <h3 className="text-xl font-semibold text-green-800 mb-4">
-                      Check-In de Jueces
-                    </h3>
-                    <div className="space-y-2 mb-6">
-                      {judges.map((judge, index) => (
-                        <div key={index} className="text-gray-700">
-                          {judge}
-                        </div>
-                      ))}
-                    </div>
-                    <Button className="bg-green-800 text-white hover:bg-green-700 font-semibold">
-                      VER JUECES
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </main>
-
-        <Footer />
+        )}
+        
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto p-6">{renderCurrentStep()}</main>
       </div>
     </div>
   );
