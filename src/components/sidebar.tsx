@@ -1,9 +1,18 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { usePathname } from "next/navigation"
-import { Home, Settings, Trophy, Users, MessageSquare, UserCheck, UserX, BarChart3 } from "lucide-react"
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import {
+  Home,
+  Settings,
+  Trophy,
+  Users,
+  MessageSquare,
+  UserCheck,
+  UserX,
+  BarChart3,
+} from "lucide-react";
 import AlegatorLogo from "@/assets/alegator-logo.svg";
 import { Dispatch, SetStateAction } from "react";
 

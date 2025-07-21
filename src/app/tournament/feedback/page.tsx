@@ -1,15 +1,73 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Search, Filter, User } from "lucide-react"
-import { Sidebar } from "@/components/sidebar"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Search,
+  Filter,
+  User,
+  Home,
+  Settings,
+  Trophy,
+  Users,
+  MessageSquare,
+  UserCheck,
+  UserX,
+  BarChart3,
+} from "lucide-react";
+import { Sidebar } from "@/app/(site)/AdminSidebar";
+import Navbar, { NavbarItem } from "@/app/(site)/Navbar";
 import Footer from "@/app/(site)/Footer";
 
+const sidebarItems: NavbarItem[] = [
+  { href: "/tournament/home", label: "Inicio", icon: <Home size={20} /> },
+  {
+    href: "/tournament/config",
+    label: "Configurar Torneo",
+    icon: <Settings size={20} />,
+  },
+  {
+    href: "/tournament/classification",
+    label: "Clasificación",
+    icon: <Trophy size={20} />,
+  },
+  {
+    href: "/tournament/rounds",
+    label: "Rondas",
+    icon: <BarChart3 size={20} />,
+  },
+  {
+    href: "/tournament/participants",
+    label: "Participantes",
+    icon: <Users size={20} />,
+  },
+  {
+    href: "/tournament/feedback",
+    label: "Feedback",
+    icon: <MessageSquare size={20} />,
+  },
+  { href: "/tournament/staff", label: "Staff", icon: <UserCheck size={20} /> },
+  {
+    href: "/tournament/incompatibility",
+    label: "Incompatibilidad",
+    icon: <UserX size={20} />,
+  },
+];
+
 export default function TournamentFeedback() {
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
 const feedbackEntries = [
     { 
@@ -124,18 +182,30 @@ const feedbackEntries = [
     }
 
   return (
-    <div className="min-h-screen flex bg-[#ADBC9F]">
-      <Sidebar />
+  <div className="min-h-screen flex bg-[#ADBC9F] flex-col overflow-x-hidden">
+    {/* Navbar solo en mobile */}
+    {isMobile && <Navbar items={sidebarItems} />}
+
+    <div className="flex flex-1 pt-20 md:pt-0">
+      {/* Sidebar solo en desktop */}
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
 
       <div className="flex-1 flex flex-col">
-        <main className="flex-1 p-8">
-          <h1 className="text-4xl font-bold text-[#11372A] mb-8 text-center">FEEDBACK</h1>
+        <main className="flex-1 p-2 md:p-8">
+          <h1 className="text-4xl font-bold text-[#11372A] mb-8 text-center">
+            FEEDBACK
+          </h1>
 
-          <div className="max-w-6xl mx-auto">
+          <div className="w-full md:max-w-6xl md:mx-auto px-2 md:px-0">
             {/* Search and Filter */}
-            <div className="flex gap-4 mb-6">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <div className="flex gap-4 mb-6 flex-wrap">
+              <div className="flex-1 relative min-w-[180px]">
+                <Search
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
                 <Input
                   placeholder="Buscar feedback..."
                   value={searchTerm}
@@ -143,7 +213,7 @@ const feedbackEntries = [
                   className="pl-10 bg-white rounded-full"
                 />
               </div>
-              <Button className="bg-[#11372A] text-white hover:bg-green-700 flex items-center gap-2 rounded-lg">
+              <Button className="bg-[#11372A] text-white hover:bg-green-700 flex items-center gap-2 rounded-lg min-w-[100px]">
                 <Filter size={16} />
                 Filtro
               </Button>
@@ -152,24 +222,34 @@ const feedbackEntries = [
             {/* Feedback Table */}
             <Card className="bg-white/90 backdrop-blur rounded-lg">
               <CardContent className="p-0">
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto w-full">
                   <table className="w-full">
                     <thead>
                       <tr className="bg-[#11372A] text-white rounded-t-lg overflow-hidden">
-                        <th className="p-4 text-left font-semibold rounded-tl-lg">Dirigido a</th>
-                        <th className="p-4 text-left font-semibold">Autor</th>
-                        <th className="p-4 text-left font-semibold">Fecha</th>
-                        <th className="p-4 text-center font-semibold">Ronda</th>
-                        <th className="p-4 text-center font-semibold rounded-tr-lg">Acción</th>
+                        <th className="p-2 md:p-4 text-left font-semibold rounded-tl-lg">
+                          Dirigido a
+                        </th>
+                        <th className="p-2 md:p-4 text-left font-semibold">
+                          Autor
+                        </th>
+                        <th className="p-2 md:p-4 text-left font-semibold">
+                          Fecha
+                        </th>
+                        <th className="p-2 md:p-4 text-center font-semibold">Ronda</th>
+                        <th className="p-2 md:p-4 text-center font-semibold rounded-tr-lg">
+                          Acción
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredFeedback.map((entry, index) => (
                         <tr
                           key={entry.id}
-                          className={`border-b ${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100`}
+                          className={`border-b ${
+                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          } hover:bg-gray-100`}
                         >
-                          <td className="p-4">
+                          <td className="p-2 md:p-4">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2">
                                 <User size={16} className="text-gray-600" />
@@ -178,19 +258,21 @@ const feedbackEntries = [
                               <span className="text-sm text-gray-500 ml-6">{entry.equipo}</span>
                             </div>
                           </td>
-                          <td className="p-4">
+                          <td className="p-2 md:p-4">
                             <div className="flex items-center gap-2">
                               <User size={16} className="text-gray-600" />
                               <span className="font-medium">{entry.autor}</span>
                             </div>
                           </td>
-                          <td className="p-4">{entry.fecha}</td>
-                          <td className="p-4 text-center">{entry.ronda}</td>
-                          <td className="p-4 text-center">
+                          <td className="p-2 md:p-4">{entry.fecha}</td>
+                          <td className="p-2 md:p-4 text-center">
+                            {entry.ronda}
+                          </td>
+                          <td className="p-2 md:p-4 text-center">
                             <Button
                               variant="link"
                               onClick={() => openModal(entry.mensaje)}
-                              className="text-green-800 hover:text-green-600 font-semibold underline"
+                              className="text-[#11372A] hover:text-green-600 font-semibold underline"
                             >
                               Ver mensaje
                             </Button>
@@ -199,13 +281,14 @@ const feedbackEntries = [
                       ))}
                     </tbody>
                   </table>
-                </div>
 
-                {filteredFeedback.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    No se encontraron entradas de feedback que coincidan con la búsqueda.
-                  </div>
-                )}
+                  {filteredFeedback.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      No se encontraron entradas de feedback que coincidan con
+                      la búsqueda.
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -226,5 +309,6 @@ const feedbackEntries = [
         <Footer />
       </div>
     </div>
-  )
-}
+  </div>
+  );
+};

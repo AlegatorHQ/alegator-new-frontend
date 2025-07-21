@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react"
 import { Sidebar } from "@/components/sidebar"
@@ -143,5 +143,5 @@ export default function TournamentApp() {
         <main className="flex-1 overflow-auto p-6">{renderCurrentStep()}</main>
       </div>
     </div>
-  )
+  );
 }

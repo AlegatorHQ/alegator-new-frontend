@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -37,15 +37,18 @@ export default function TournamentIncompatibility() {
   const incompatibilityTypes = [
     {
       title: "Juez - Equipo",
-      description: "Ver las incompatibilidades registradas entre juez y equipo de este torneo.",
+      description:
+        "Ver las incompatibilidades registradas entre juez y equipo de este torneo.",
     },
     {
       title: "Juez - Juez",
-      description: "Ver las incompatibilidades registradas entre jueces de este torneo.",
+      description:
+        "Ver las incompatibilidades registradas entre jueces de este torneo.",
     },
     {
       title: "Juez - Institución",
-      description: "Ver las incompatibilidades registradas entre juez e institución participante de este torneo.",
+      description:
+        "Ver las incompatibilidades registradas entre juez e institución participante de este torneo.",
     },
   ];
 
@@ -93,7 +96,9 @@ export default function TournamentIncompatibility() {
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-xl font-semibold text-green-800 mb-2">{type.title}</h3>
+                          <h3 className="text-xl font-semibold text-green-800 mb-2">
+                            {type.title}
+                          </h3>
                           <p className="text-gray-600">{type.description}</p>
                         </div>
                         <ChevronRight className="text-green-800" size={24} />
@@ -213,5 +218,5 @@ export default function TournamentIncompatibility() {
         <Footer />
       </div>
     </div>
-  )
+  );
 }

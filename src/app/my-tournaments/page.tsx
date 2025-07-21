@@ -1,64 +1,200 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ChevronRight, User, Settings, LogOut } from "lucide-react"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ChevronRight, User, Settings, LogOut } from "lucide-react";
 import Footer from "@/app/(site)/Footer";
 import Navbar from "@/app/(site)/Navbar";
+import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
+
+const PALETTE = {
+  bg: "#b7c7a2",
+  card: "#f5f7f2",
+  accent: "#cddcaa",
+  dark: "#133c2b",
+  green: "#8ca62e",
+  yellow: "#ffe97a",
+  text: "#133c2b",
+  textSecondary: "#4d5c4a",
+  white: "#fff",
+};
 
 export default function Dashboard() {
-  const [tournaments] = useState([
-{ id: 1, name: "Summer Championship", status: "Terminado", action: "Ver Clasificación", date: "2023-07-15", participants: 32 },
-    { name: "Winter Cup", status: "Pendiente", action: "Ver Detalles", date: "2023-12-10", participants: 24 },
-    { name: "Spring Open", status: "Pendiente", action: "Ver Detalles", date: "2024-03-22", participants: 16 },
-    { name: "Autumn League", status: "Pendiente", action: "Ver Detalles", date: "2023-11-05", participants: 20 },
-    { name: "New Year Tournament", status: "Pendiente", action: "Ver Detalles", date: "2024-01-15", participants: 28 },
-    ]);
+  const [tournaments, setTournaments] = useState<any[]>([]);
+  const [participatedTournaments, setParticipatedTournaments] = useState<any[]>(
+    []
+  );
+  const [username, setUsername] = useState("");
+  const [userCode, setUserCode] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [selectedTab, setSelectedTab] = useState<"created" | "participated">(
+    "created"
+  );
+  const [avatar, setAvatar] = useState("/avatars/avatar1.png");
+  const router = useRouter();
 
-const [activeView, setActiveView] = useState("upcoming")
-const upcomingTournaments = [
-  { name: "Debate Global 2025", date: "10 de agosto de 2025", status: "Inscrito" },
-  { name: "Torneo Regional de Panamá", date: "22 de septiembre de 2025", status: "Inscrito" },
-]
+  useEffect(() => {
+    const fetchUserAndTournaments = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUsername(user.user_metadata?.username || user.email || "Usuario");
+        setUserCode(user.id?.slice(0, 7) || "------");
 
+        // Obtener avatar guardado en localStorage (de profile)
+        const storedProfile = localStorage.getItem("profileData");
+        if (storedProfile) {
+          const data = JSON.parse(storedProfile);
+          setAvatar(data.avatar || "/avatars/avatar1.png");
+        }
+
+        // Torneos creados por el usuario
+        const { data: createdData, error: createdError } = await supabase
+          .from("tournaments")
+          .select("*")
+          .eq("created_by", user.id);
+
+        if (!createdError && createdData) {
+          setTournaments(createdData);
+        }
+
+        // Torneos en los que participa el usuario
+        const { data: participantData, error: participantError } =
+          await supabase
+            .from("tournament_participants")
+            .select("tournament_id, status")
+            .eq("user_id", user.id);
+
+        if (
+          !participantError &&
+          participantData &&
+          participantData.length > 0
+        ) {
+          const tournamentIds = participantData.map(
+            (p: any) => p.tournament_id
+          );
+          const { data: tournamentsData, error: tournamentsError } =
+            await supabase
+              .from("tournaments")
+              .select("*")
+              .in("id", tournamentIds);
+
+          if (!tournamentsError && tournamentsData) {
+            const tournamentsWithStatus = tournamentsData.map((t) => {
+              const participant = participantData.find(
+                (p: any) => p.tournament_id === t.id
+              );
+              return {
+                ...t,
+                status: participant?.status || "Pendiente",
+              };
+            });
+            setParticipatedTournaments(tournamentsWithStatus);
+          }
+        }
+      }
+      setLoading(false);
+    };
+    fetchUserAndTournaments();
+  }, []);
+
+  const handleEditAccount = () => {
+    router.push("/profile");
+  };
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.replace("/login");
+  };
+
+  // Decide qué lista mostrar
+  const tournamentsToShow =
+    selectedTab === "created" ? tournaments : participatedTournaments;
 
   return (
-    <div className="flex flex-col bg-[#ADBC9F]">
-        <Navbar />
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ background: PALETTE.bg }}
+    >
+      <Navbar />
 
-      <main className="flex-1 container mx-auto px-4 py-32 ">
-        <h1 className="text-4xl font-bold text-[#11372A] mb-10">BIENVENIDO USERNAME</h1>
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-8" style={{ color: PALETTE.text }}>
+          BIENVENIDO {username}
+        </h1>
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Left Column */}
           <div className="space-y-6">
             {/* Create Tournament Button */}
             <Link href="/tournament/create">
-                <Button className="w-full alegator-button text-white py-6 text-xl font-bold bg-[#6B9026] hover:bg-[#55731e]">
+              <Button
+                className="w-full py-6 text-xl font-bold rounded-full"
+                style={{
+                  background: PALETTE.green,
+                  color: PALETTE.white,
+                  fontFamily: "Montserrat, sans-serif",
+                }}
+              >
                 CREAR TORNEO NUEVO
                 </Button>
             </Link>
 
             {/* User Account */}
-            <Card className="bg-white/80 backdrop-blur">
+            <Card
+              className="backdrop-blur"
+              style={{ background: PALETTE.card, border: "none" }}
+            >
               <CardHeader>
-                <CardTitle className="text-2xl font-bold text-[#11372A]">TU CUENTA</CardTitle>
+                <CardTitle style={{ color: PALETTE.text }}>TU CUENTA</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#11372A] rounded-full flex items-center justify-center">
-                    <User className="text-white" size={24} />
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden"
+                    style={{ background: PALETTE.green }}
+                  >
+                    <Image
+                      src={avatar}
+                      alt="Avatar"
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover"
+                    />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#11372A]">Username</p>
-                    <p className="text-sm text-[#11372A]">Código: ha34fck</p>
+                    <p
+                      className="font-semibold"
+                      style={{ color: PALETTE.text }}
+                    >
+                      {username}
+                    </p>
+                    <p
+                      className="text-sm"
+                      style={{ color: PALETTE.textSecondary }}
+                    >
+                      Código: {userCode}
+                    </p>
                   </div>
                 </div>
 
-                <Button className="w-full bg-[#11372A] text-white hover:bg-[#0d291e] flex items-center justify-between">
+                <Button
+                  className="w-full flex items-center justify-between"
+                  style={{
+                    background: PALETTE.text,
+                    color: PALETTE.white,
+                    fontFamily: "Montserrat, sans-serif",
+                  }}
+                  onClick={handleEditAccount}
+                >
                   <span className="flex items-center gap-2">
                     <Settings size={16} />
                     Editar cuenta
@@ -68,7 +204,13 @@ const upcomingTournaments = [
 
                 <Button
                   variant="outline"
-                  className="w-full border-[#11372A] text-[#11372A] hover:bg-gray-200 hover:text-[#11372A] bg-transparent"
+                  className="w-full"
+                  style={{
+                    borderColor: PALETTE.text,
+                    color: PALETTE.text,
+                    background: "transparent",
+                  }}
+                  onClick={handleLogout}
                 >
                   <LogOut size={16} className="mr-2" />
                   Cerrar Sesión
@@ -76,100 +218,143 @@ const upcomingTournaments = [
               </CardContent>
             </Card>
 
-            {/* Tournament List */}
-            <Card className="bg-white/80 backdrop-blur">
+            {/* Tournament List Tabs (solo selección, no muestra torneos aquí) */}
+            <Card
+              className="backdrop-blur"
+              style={{ background: PALETTE.card, border: "none" }}
+            >
               <CardHeader>
-                <CardTitle className="text-2xl font-bold text-[#11372A]">LISTA DE TUS TORNEOS</CardTitle>
+                <CardTitle style={{ color: PALETTE.text }}>
+                  LISTA DE TUS TORNEOS
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-
-                <Button
-                  onClick={() => setActiveView("yours")}
-                  className={`w-full flex items-center justify-between font-semibold py-4 ${
-                    activeView === "yours"
-                      ? "bg-yellow-400 text-[#11372A] hover:bg-yellow-500"
-                      : "bg-[#11372A] text-white hover:bg-[#0d291e]"
-                  }`}
-                >
-                  <span>Tus torneos</span>
-                  <ChevronRight size={16} />
-                </Button>
-
-                <Button
-                  onClick={() => setActiveView("participated")}
-                  className={`w-full flex items-center justify-between font-semibold py-4 ${
-                    activeView === "participated"
-                      ? "bg-yellow-400 text-[#11372A] hover:bg-yellow-500"
-                      : "bg-[#11372A] text-white hover:bg-[#0d291e]"
-                  }`}
-                >
-                  <span>Torneos en los que participaste</span>
-                  <ChevronRight size={16} />
-                </Button>
+                <div className="flex flex-col gap-2">
+                  <Button
+                    className={`w-full flex items-center justify-between font-montserrat text-base sm:text-lg rounded-full py-2 px-8 transition ${
+                      selectedTab === "created" ? "font-bold" : ""
+                    }`}
+                    style={{
+                      background:
+                        selectedTab === "created" ? PALETTE.text : PALETTE.card,
+                      color:
+                        selectedTab === "created"
+                          ? PALETTE.white
+                          : PALETTE.text,
+                      border: `2px solid ${PALETTE.text}`,
+                    }}
+                    onClick={() => setSelectedTab("created")}
+                  >
+                    <span>Tus torneos</span>
+                    <ChevronRight size={16} />
+                  </Button>
+                  <Button
+                    className={`w-full flex items-center justify-between font-montserrat text-base sm:text-lg rounded-full py-2 px-8 transition ${
+                      selectedTab === "participated" ? "font-bold" : ""
+                    }`}
+                    style={{
+                      background:
+                        selectedTab === "participated"
+                          ? PALETTE.yellow
+                          : PALETTE.card,
+                      color: PALETTE.text,
+                      border: `2px solid ${PALETTE.text}`,
+                    }}
+                    onClick={() => setSelectedTab("participated")}
+                  >
+                    <span>Torneos en los que participaste</span>
+                    <ChevronRight size={16} />
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Right Column */}
+          {/* Right Column: muestra la lista dinámica */}
           <div>
-            <Card className="bg-white/80 backdrop-blur">
+            <Card
+              className="backdrop-blur"
+              style={{ background: PALETTE.card, border: "none" }}
+            >
               <CardHeader>
-                <CardTitle className="text-2xl font-bold text-[#11372A]">
-                  {activeView === "yours"
+                <CardTitle style={{ color: PALETTE.text }}>
+                  {selectedTab === "created"
                     ? "TUS TORNEOS"
-                    : activeView === "participated"
-                    ? "TORNEOS EN LOS QUE PARTICIPASTE"
-                    : "PRÓXIMOS TORNEOS"}
+                    : "TORNEOS EN LOS QUE PARTICIPASTE"}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {activeView === "yours" && (
-                  <>
-                    {/* Torneos propios */}
-                    <p className="text-gray-700">Aquí aparecerán los torneos que creaste.</p>
-                    {/* Puedes mapear datos reales más adelante */}
-                  </>
-                )}
-
-                {activeView === "participated" && (
-                  <>
-                    {tournaments.map((tournament, index) => (
-                      <div key={index} className="flex items-center justify-between py-3 border-b last:border-b-0">
-                        <div className="flex items-center gap-4">
-                          <div>
-                            <p className="font-semibold">{tournament.name}</p>
-                            <p className="text-sm text-gray-600">{tournament.status}</p>
-                          </div>
+                {loading ? (
+                  <div className="text-center" style={{ color: PALETTE.text }}>
+                    Cargando...
+                  </div>
+                ) : tournamentsToShow.length === 0 ? (
+                  <div
+                    className="text-center"
+                    style={{ color: PALETTE.textSecondary }}
+                  >
+                    {selectedTab === "created"
+                      ? "No has creado ningún torneo."
+                      : "No has participado en ningún torneo."}
+                  </div>
+                ) : (
+                  tournamentsToShow.map((tournament) => (
+                    <div
+                      key={tournament.id}
+                      className="flex items-center justify-between py-3 border-b last:border-b-0"
+                    >
+                      <div className="flex items-center gap-4">
+                        <Badge
+                          variant={
+                            tournament.status === "Terminado"
+                              ? "default"
+                              : "secondary"
+                          }
+                          className={
+                            tournament.status === "Terminado"
+                              ? "bg-green-600"
+                              : "bg-yellow-500"
+                          }
+                          style={{
+                            background:
+                              tournament.status === "Terminado"
+                                ? PALETTE.green
+                                : PALETTE.yellow,
+                            color: PALETTE.text,
+                          }}
+                        >
+                          {tournament.status === "Terminado" ? "T" : "P"}
+                        </Badge>
+                        <div>
+                          <p
+                            className="font-semibold"
+                            style={{ color: PALETTE.text }}
+                          >
+                            {tournament.name}
+                          </p>
+                          <p
+                            className="text-sm"
+                            style={{ color: PALETTE.textSecondary }}
+                          >
+                            {tournament.status || "Pendiente"}
+                          </p>
                         </div>
-                        <Button variant="link" className="text-green-800">
-                          {tournament.action}
-                        </Button>
                       </div>
-                    ))}
-                  </>
+                      <Button
+                        variant="link"
+                        className="text-green-800 hover:text-green-600"
+                        style={{
+                          color: PALETTE.text,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {tournament.status === "Terminado"
+                          ? "Ver Clasificación"
+                          : "Ver Detalles"}
+                      </Button>
+                    </div>
+                  ))
                 )}
-                  {activeView === "upcoming" && (
-                    <>
-                      {upcomingTournaments.map((tournament, index) => (
-                        <div key={index} className="flex items-center justify-between py-3 border-b last:border-b-0">
-                          <div>
-                            <p className="font-semibold text-[#11372A]">{tournament.name}</p>
-                            <p className="text-sm text-gray-600">Fecha: {tournament.date}</p>
-                          </div>
-                          <Badge className="bg-green-600 text-white">{tournament.status}</Badge>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                <div className="pt-4">
-                <Button
-                  onClick={() => setActiveView("upcoming")}
-                  className="w-full alegator-button text-white py-6 text-md bg-[#6B9026] hover:bg-[#55731e]"
-                >
-                  <ChevronRight size={16} className="rotate-180" />
-                  Volver a Próximos Torneos
-                </Button>
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -178,5 +363,5 @@ const upcomingTournaments = [
 
       <Footer />
     </div>
-  )
+  );
 }

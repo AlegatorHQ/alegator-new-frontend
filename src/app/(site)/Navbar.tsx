@@ -3,85 +3,185 @@
 import Image from "next/image";
 import Link from "next/link";
 import AlegatorLogo from "@/assets/alegator-logo.svg";
-import { useState, useEffect } from "react";
+import LogoutIcon from "@/assets/logout.png";
+import { useState, useEffect, memo } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function Navbar() {
+export type NavbarItem = {
+  href: string;
+  label: string;
+  icon?: React.ReactNode;
+  showWhenLoggedIn?: boolean;
+  showWhenLoggedOut?: boolean;
+};
+
+type NavbarProps = {
+  items?: NavbarItem[];
+};
+
+const defaultItems: NavbarItem[] = [
+  { href: "/", label: "INICIO" },
+  { href: "/my-tournaments", label: "TORNEOS" },
+  { href: "/events", label: "EVENTOS" },
+];
+
+// Evita recargar el Navbar - consulta el estado de sesión una vez y escucha cambios
+let cachedSession: boolean | null = null;
+let listeners: ((logged: boolean) => void)[] = [];
+
+function subscribeSession(callback: (logged: boolean) => void) {
+  listeners.push(callback);
+  callback(cachedSession ?? false);
+  return () => {
+    listeners = listeners.filter((cb) => cb !== callback);
+  };
+}
+
+function notifyListeners(logged: boolean) {
+  listeners.forEach((cb) => cb(logged));
+}
+
+function setupSessionListener() {
+  if (typeof window === "undefined" || setupSessionListener.done) return;
+  setupSessionListener.done = true;
+  const supabase = createClient();
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    cachedSession = !!session;
+    notifyListeners(cachedSession);
+  });
+  supabase.auth.onAuthStateChange((_event, session) => {
+    cachedSession = !!session;
+    notifyListeners(cachedSession);
+  });
+}
+setupSessionListener.done = false;
+
+// Memoiza el logo para evitar recarga innecesaria
+const MemoLogo = memo(function MemoLogo() {
+  return (
+    <Image
+      src={AlegatorLogo}
+      alt="Alegator"
+      width={90}
+      height={90}
+      className="h-20 w-auto"
+      priority
+      draggable={false}
+    />
+  );
+});
+
+export default function Navbar({ items = defaultItems }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(cachedSession ?? false);
+
+  const supabase = createClient();
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsLoggedIn(!!session);
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setIsLoggedIn(!!session);
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    setupSessionListener();
+    const unsubscribe = subscribeSession(setIsLoggedIn);
+    return unsubscribe;
   }, []);
+
+  const handleSignOut = async () => {
+    try {
+      const refreshToken = localStorage.getItem("django_refresh_token");
+
+      // 1. Logout from Django backend to blacklist the token
+      if (refreshToken) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ refresh: refreshToken }),
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Error logging out from Django backend:", error);
+      // We can still proceed with the rest of the logout process
+    }
+
+    // 2. Sign out from Supabase
+    await supabase.auth.signOut();
+
+    // 3. Clear Django tokens from localStorage
+    localStorage.removeItem("django_access_token");
+    localStorage.removeItem("django_refresh_token");
+
+    // 4. Redirect to login page
+    window.location.href = "/login";
+  };
 
   return (
     <nav className="fixed top-0 z-50 w-full bg-[#11372A]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-8">
-        <Link
-          href="/"
-          className="flex items-center h-14 md:h-20 min-w-[56px] md:min-w-[120px]"
-        >
-          <Image
-            src={AlegatorLogo}
-            alt="Alegator"
-            width={80}
-            height={80}
-            className="h-14 w-auto md:h-20"
-            priority
-          />
+        <Link href="/" className="flex items-center h-20 min-w-[90px]">
+          <MemoLogo />
         </Link>
 
         {/* Menú desktop */}
         <div className="flex-1 flex justify-end items-center gap-12">
-          <Link
-            href="/dashboard"
-            className="text-white font-bold text-lg hidden md:block"
-          >
-            INICIO
-          </Link>
-          <Link
-            href="/my-tournaments"
-            className="text-white font-bold text-lg hidden md:block"
-          >
-            MIS TORNEOS
-          </Link>
-          <Link
-            href="/events"
-            className="text-white font-bold text-lg hidden md:block"
-          >
-            EVENTOS
-          </Link>
+          {items.map((item) => {
+            // Si el ítem es "TORNEOS" y el usuario no está logueado, redirige a /login
+            if (item.href === "/my-tournaments" && !isLoggedIn) {
+              return (
+                <Link
+                  key={item.href}
+                  href="/login"
+                  className="text-white font-bold text-lg hidden md:block"
+                >
+                  {item.icon ? item.icon : item.label}
+                </Link>
+              );
+            }
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-white font-bold text-lg hidden md:block"
+              >
+                {item.icon ? item.icon : item.label}
+              </Link>
+            );
+          })}
           {/* Perfil o Iniciar sesión */}
           {isLoggedIn ? (
-            <Link
-              href="/profile"
-              className="text-white text-2xl ml-4 hidden md:block"
-            >
-              <svg
-                width="28"
-                height="28"
-                fill="currentColor"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
+            <>
+              <Link
+                href="/profile"
+                className="text-white text-2xl ml-4 hidden md:block"
+                title="Perfil"
               >
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20c0-4 8-4 8-4s8 0 8 4" />
-              </svg>
-            </Link>
+                <svg
+                  width="28"
+                  height="28"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 8-4 8-4s8 0 8 4" />
+                </svg>
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="ml-4 hidden md:flex items-center justify-center bg-transparent hover:bg-[#1e5943] rounded-full p-2 transition"
+                title="Cerrar sesión"
+              >
+                <Image
+                  src={LogoutIcon}
+                  alt="Logout"
+                  width={28}
+                  height={28}
+                  className="w-7 h-7"
+                />
+              </button>
+            </>
           ) : (
             <Link
               href="/login"
@@ -117,37 +217,33 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden bg-[#154134] border-t border-[#1e5943] px-6 py-4">
           <nav className="flex flex-col items-center gap-4">
-            <Link href="/dashboard" className="text-white font-bold text-lg">
-              INICIO
-            </Link>
-            <Link
-              href="/my-tournaments"
-              className="text-white font-bold text-lg"
-            >
-              MIS TORNEOS
-            </Link>
-            <Link href="/events" className="text-white font-bold text-lg">
-              EVENTOS
-            </Link>
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-white font-bold text-lg"
+              >
+                {item.icon ? item.icon : item.label}
+              </Link>
+            ))}
+            <hr className="w-full border-[#1e5943] my-2" />
             {/* Perfil o Iniciar sesión en móvil */}
             {isLoggedIn ? (
-              <Link
-                href="/profile"
-                className="text-white text-2xl flex items-center gap-2"
-              >
-                <svg
-                  width="28"
-                  height="28"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
+              <>
+                <Link
+                  href="/profile"
+                  className="w-full text-white font-bold text-lg text-center py-2 rounded-full bg-[#8ca62e] hover:bg-[#7fa650] transition mt-2"
+                  style={{ border: "1px solid #1e5943" }}
                 >
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c0-4 8-4 8-4s8 0 8 4" />
-                </svg>
-                Perfil
-              </Link>
+                  PERFIL
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="w-full text-white font-bold text-lg py-2 rounded-full bg-[#630000] hover:bg-[#630000] transition mt-2"
+                >
+                  CERRAR SESIÓN
+                </button>
+              </>
             ) : (
               <Link
                 href="/login"

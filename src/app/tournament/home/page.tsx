@@ -1,13 +1,22 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Trophy, Users, MessageSquare, Settings, BarChart3, Calendar, Clock, TrendingUp } from "lucide-react"
+import { useState } from "react";
+import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Trophy,
+  Users,
+  MessageSquare,
+  Settings,
+  BarChart3,
+  Calendar,
+  Clock,
+  TrendingUp,
+} from "lucide-react";
+import { Sidebar } from "@/app/(site)/AdminSidebar";
 import Footer from "@/app/(site)/Footer";
-import { Sidebar } from "@/components/sidebar"
 
 export default function AdminTournamentHomePage() {
   const [selectedTournament] = useState({
@@ -19,7 +28,7 @@ export default function AdminTournamentHomePage() {
     currentRound: 3,
     startDate: "2024-03-15",
     endDate: "2024-03-17",
-  })
+  });
 
   const quickStats = [
     { title: "Rondas Completadas", value: "3/5", icon: BarChart3, color: "bg-green-600", change: "60%" },
@@ -71,35 +80,35 @@ export default function AdminTournamentHomePage() {
       icon: Users,
       color: "bg-indigo-600",
     },
-  ]
+  ];
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       case "medium":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "low":
-        return "bg-green-100 text-green-800 border-green-200"
+        return "bg-green-100 text-green-800 border-green-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-  }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "success":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "warning":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "completed":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex bg-[#ADBC9F]">
@@ -147,30 +156,40 @@ export default function AdminTournamentHomePage() {
           </div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          {quickStats.map((stat, index) => {
-            const Icon = stat.icon
-            return (
-              <Card key={index} className="bg-white shadow-lg hover:shadow-xl transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 ${stat.color} rounded-lg flex items-center justify-center`}>
-                      <Icon className="text-white" size={24} />
+          {/* Quick Stats */}
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
+            {quickStats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <Card
+                  key={index}
+                  className="bg-white shadow-lg hover:shadow-xl transition-shadow"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div
+                        className={`w-12 h-12 ${stat.color} rounded-lg flex items-center justify-center`}
+                      >
+                        <Icon className="text-white" size={24} />
+                      </div>
+                      {stat.change && (
+                        <Badge
+                          variant="outline"
+                          className="text-green-600 border-green-600"
+                        >
+                          {stat.change}
+                        </Badge>
+                      )}
                     </div>
-                    {stat.change && (
-                      <Badge variant="outline" className="text-green-600 border-green-600">
-                        {stat.change}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-600 mb-1">{stat.title}</p>
-                  <p className="text-3xl font-bold text-green-800">{stat.value}</p>
-                </CardContent>
-              </Card>
-            )
-          })}
-        </div>
+                    <p className="text-sm text-gray-600 mb-1">{stat.title}</p>
+                    <p className="text-3xl font-bold text-green-800">
+                      {stat.value}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
 
         {/* Admin Actions Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -195,8 +214,8 @@ export default function AdminTournamentHomePage() {
         </div>
       </main>
 
-      <Footer />
-        </div>
+        <Footer />
+      </div>
     </div>
-  )
+  );
 }

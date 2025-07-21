@@ -1,41 +1,115 @@
-"use client"
+"use client";
 
-import { ChevronRight } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Sidebar } from "@/components/sidebar"
+import { useState, useEffect } from "react";
+import {
+  ChevronRight,
+  Home,
+  Settings,
+  Trophy,
+  Users,
+  MessageSquare,
+  UserCheck,
+  UserX,
+  BarChart3,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Sidebar } from "@/app/(site)/AdminSidebar";
+import Navbar, { NavbarItem } from "@/app/(site)/Navbar";
 import Footer from "@/app/(site)/Footer";
+
+const sidebarItems: NavbarItem[] = [
+  { href: "/tournament/home", label: "Inicio", icon: <Home size={20} /> },
+  {
+    href: "/tournament/config",
+    label: "Configurar Torneo",
+    icon: <Settings size={20} />,
+  },
+  {
+    href: "/tournament/classification",
+    label: "Clasificación",
+    icon: <Trophy size={20} />,
+  },
+  {
+    href: "/tournament/rounds",
+    label: "Rondas",
+    icon: <BarChart3 size={20} />,
+  },
+  {
+    href: "/tournament/participants",
+    label: "Participantes",
+    icon: <Users size={20} />,
+  },
+  {
+    href: "/tournament/feedback",
+    label: "Feedback",
+    icon: <MessageSquare size={20} />,
+  },
+  { href: "/tournament/staff", label: "Staff", icon: <UserCheck size={20} /> },
+  {
+    href: "/tournament/incompatibility",
+    label: "Incompatibilidad",
+    icon: <UserX size={20} />,
+  },
+];
 
 const configOptions = [
   {
-    title: "Información pública",
-    description: "Configura qué información del torneo será visible para los participantes y público en general.",
+    title: "Reglas de puntuación",
+    description:
+      "El rango de puntajes que se pueden otorgar a discursos, respuestas y equipos.",
   },
   {
     title: "Reglas del enfrentamiento",
-    description: "Establece cómo se emparejarán los equipos durante las rondas y los criterios de enfrentamiento.",
+    description:
+      "Cómo se emparejan los equipos y cómo se asignan automáticamente los jueces.",
   },
   {
-    title: "Publicación de Resultados",
-    description: "Define cuándo y cómo se mostrarán los resultados a los participantes después de cada ronda.",
+    title: "Reglas de puntuación",
+    description:
+      "El rango de puntajes que se pueden otorgar a discursos, respuestas y equipos.",
   },
   {
-    title: "Reglas de Clasificación",
-    description: "Configura los criterios para determinar la clasificación final de los equipos en el torneo.",
+    title: "Reglas de puntuación",
+    description:
+      "El rango de puntajes que se pueden otorgar a discursos, respuestas y equipos.",
   },
   {
-    title: "Retroalimentación",
-    description: "Establece si los jueces podrán proporcionar comentarios a los equipos y qué información incluirán.",
+    title: "Reglas de puntuación",
+    description:
+      "El rango de puntajes que se pueden otorgar a discursos, respuestas y equipos.",
+  },
+  {
+    title: "Reglas de puntuación",
+    description:
+      "El rango de puntajes que se pueden otorgar a discursos, respuestas y equipos.",
   },
 ];
 
 export default function TournamentConfig() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="min-h-screen flex bg-[#ADBC9F]">
-      <Sidebar />
+    <div className="min-h-screen flex">
+      {/* Navbar solo en mobile */}
+      {isMobile && <Navbar items={sidebarItems} />}
+
+      {/* Sidebar solo en desktop */}
+      {!isMobile && <Sidebar />}
 
       <div className="flex-1 flex flex-col">
-        <main className="flex-1 p-8">
-          <h1 className="text-4xl font-bold text-[#11372A] mb-8 text-center">CONFIGURAR TORNEO</h1>
+        <main className="flex-1 container mx-auto px-4 py-8 md:mt-0 mt-16">
+          <h1 className="text-4xl font-bold text-green-800 mb-8 text-center">
+            CONFIGURAR TORNEO
+          </h1>
 
           <div className="max-w-4xl mx-auto space-y-4">
             {configOptions.map((option, index) => (
@@ -43,11 +117,15 @@ export default function TournamentConfig() {
                 key={index}
                 className="bg-white backdrop-blur hover:bg-white/70 transition-colors cursor-pointer"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-xl font-semibold text-[#11372A] mb-2">{option.title}</h3>
-                      <p className="text-gray-600">{option.description}</p>
+                      <h3 className="text-lg md:text-xl font-semibold text-green-800 mb-2">
+                        {option.title}
+                      </h3>
+                      <p className="text-sm md:text-base text-gray-600">
+                        {option.description}
+                      </p>
                     </div>
                     <ChevronRight className="text-green-800" size={24} />
                   </div>
@@ -60,5 +138,5 @@ export default function TournamentConfig() {
         <Footer />
       </div>
     </div>
-  )
+  );
 }

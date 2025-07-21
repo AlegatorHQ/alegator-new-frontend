@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Search, Plus, Users, UserCheck } from "lucide-react"
-import { Sidebar } from "@/components/sidebar"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Search, Plus, Users, UserCheck } from "lucide-react";
+import { Sidebar } from "@/components/sidebar";
 import Footer from "@/app/(site)/Footer";
 
 export default function TournamentParticipants() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [activeTab, setActiveTab] = useState("teams")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState("teams");
 
 const [teams, setTeams] = useState([
   {
@@ -70,7 +70,7 @@ const handleDeleteClick = (id: number) => {
 
   return (
     <div className="min-h-screen flex bg-[#ADBC9F]">
-            <Sidebar />
+      <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 p-8 overflow-auto">
@@ -298,5 +298,5 @@ const handleDeleteClick = (id: number) => {
         <Footer />
       </div>
     </div>
-  )
+  );
 }
