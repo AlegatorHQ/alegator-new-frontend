@@ -14,6 +14,12 @@ import {
   BarChart3,
 } from "lucide-react";
 import AlegatorLogo from "@/assets/alegator-logo.svg";
+import { Dispatch, SetStateAction } from "react";
+
+interface SidebarProps {
+  activeSection: string
+  onSectionChange: Dispatch<SetStateAction<string>>;
+}
 
 const sidebarItems = [
   { href: "/tournament/home", icon: Home, label: "Inicio" },
@@ -23,22 +29,21 @@ const sidebarItems = [
   { href: "/tournament/participants", icon: Users, label: "Participantes" },
   { href: "/tournament/feedback", icon: MessageSquare, label: "Feedback" },
   { href: "/tournament/staff", icon: UserCheck, label: "Staff" },
-  {
-    href: "/tournament/incompatibility",
-    icon: UserX,
-    label: "Incompatibilidad",
-  },
+  { href: "/tournament/incompatibility", icon: UserX, label: "Incompatibilidad" },
 ];
 
-export function Sidebar() {
+export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <div className="w-64 flex-shrink-0 min-h-screen p-4 text-white bg-[#11372A]">
       <div className="flex flex-col items-center gap-2 justify-center">
-        <Link href="/" className="flex items-center h-14 md:h-20">
+        <Link
+          href="/"
+          className="flex items-center h-14 md:h-20"
+        >
           <Image
-            src={AlegatorLogo}
+            src="/assets/alegator-logo.svg"
             alt="Alegator"
             width={120}
             height={120}
@@ -58,9 +63,7 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                isActive
-                  ? "bg-green-600 text-white"
-                  : "text-gray-300 hover:bg-green-700 hover:text-white"
+                isActive ? "bg-[#6B9026] text-white" : "text-gray-300 hover:bg-[#55731e] hover:text-white"
               }`}
             >
               <Icon size={20} />

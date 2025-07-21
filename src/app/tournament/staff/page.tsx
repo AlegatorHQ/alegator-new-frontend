@@ -1,116 +1,119 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ChevronRight, ChevronLeft } from "lucide-react";
-import { Sidebar } from "@/app/(site)/AdminSidebar";
-import Footer from "@/app/(site)/Footer";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { ChevronRight, ChevronDown } from "lucide-react"
+import { Sidebar } from "@/components/sidebar"
+import Footer from "@/app/(site)/Footer"
+import clsx from "clsx"
 
 export default function TournamentStaff() {
-  const [staffMembers] = useState([
-    { id: 1, username: "Usuario12324", role: "Adjudicador Principal" },
-    { id: 2, username: "Usuario45678", role: "Adjudicador Asistente" },
-    { id: 3, username: "Usuario91011", role: "Coordinador de Rondas" },
-  ]);
+  const [activeSection, setActiveSection] = useState<string>("7")
 
-  const [adjudicationSections] = useState([
-    {
-      id: 1,
-      title: "ADJUDICACIÓN",
-      description: "Panel Principal de Adjudicación",
-    },
-    {
-      id: 2,
-      title: "ADJUDICACIÓN",
-      description: "Panel Secundario de Adjudicación",
-    },
-    {
-      id: 3,
-      title: "ADJUDICACIÓN",
-      description: "Panel de Adjudicación de Reserva",
-    },
-    {
-      id: 4,
-      title: "ADJUDICACIÓN",
-      description: "Panel de Adjudicación Especializada",
-    },
-  ]);
+  const toggleSection = (id: string) => {
+    setActiveSection(prev => (prev === id ? "" : id))
+  }
+
+  type StaffMember = { id: number; username: string; role: string }
+
+  const sectionData: { [key: string]: StaffMember[] } = {
+    "1": [
+      { id: 1, username: "Usuario12324", role: "Adjudicador Principal" },
+      { id: 2, username: "Usuario45678", role: "Adjudicador Asistente" },
+      { id: 3, username: "Usuario91011", role: "Coordinador de Rondas" },
+    ],
+    "2": [
+      { id: 4, username: "TabUser1", role: "Tabulador Jefe" },
+      { id: 5, username: "TabUser2", role: "Asistente de Tabulación" },
+    ],
+    "3": [
+      { id: 6, username: "EquidadUser1", role: "Encargado de Equidad" },
+      { id: 7, username: "EquidadUser2", role: "Asistente de Equidad" },
+    ],
+    "4": [
+      { id: 8, username: "OrgUser1", role: "Logística General" },
+      { id: 9, username: "OrgUser2", role: "Coordinador de Espacios" },
+    ],
+  }
+
+  const adjudicationSections = [
+    { id: "1", title: "ADJUDICACIÓN", description: "Jueces y adjudicadores responsables de evaluar los debates" },
+    { id: "2", title: "TABULACIÓN", description: "Equipo encargado del procesamiento y verificación de resultados" },
+    { id: "3", title: "EQUIDAD", description: "Responsables de garantizar la imparcialidad y cumplimiento de normas" },
+    { id: "4", title: "ORGANIZACIÓN", description: "Personal logístico y coordinadores del Torneo" },
+  ]
 
   return (
-    <div className="min-h-screen flex">
-      <Sidebar />
+    <div className="min-h-screen flex bg-[#ADBC9F]">
+      <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
 
       <div className="flex-1 flex flex-col">
-        <main className="flex-1 p-8">
-          <h1 className="text-4xl font-bold text-green-800 mb-8 text-center">
-            STAFF
-          </h1>
+        <main className="flex-1 px-4 md:px-8 py-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#11372A] mb-8 text-center">STAFF</h1>
 
           <div className="max-w-4xl mx-auto space-y-6">
-            {/* First Adjudication Section with Staff Members */}
-            <Card className="bg-green-800 text-white">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold">ADJUDICACIÓN</h2>
-                  <ChevronRight size={24} />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Staff Members */}
-            <div className="space-y-4">
-              {staffMembers.map((member) => (
-                <Card key={member.id} className="bg-white/80 backdrop-blur">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-lg font-semibold text-green-800">
-                          {member.username}
-                        </h3>
-                        <p className="text-gray-600">{member.role}</p>
-                      </div>
-                      <Button
-                        variant="outline"
-                        className="border-green-800 text-green-800 hover:bg-green-50 bg-transparent"
-                      >
-                        Editar Permisos
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* Additional Adjudication Sections */}
-            <div className="space-y-4">
-              {adjudicationSections.map((section) => (
-                <Card key={section.id} className="bg-green-800 text-white">
+            {adjudicationSections.map((section) => (
+              <div key={section.id}>
+                <Card
+                  onClick={() => toggleSection(section.id)}
+                  className={clsx(
+                    "cursor-pointer transition-colors duration-200",
+                    activeSection === section.id
+                      ? "bg-[#FFE682] text-[#11372A]"
+                      : "bg-[#11372A] text-white"
+                  )}
+                >
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
                         <h2 className="text-xl font-bold">{section.title}</h2>
-                        <p className="text-green-200 text-sm">
+                        <p className={clsx(
+                          "text-sm",
+                          activeSection === section.id
+                            ? "text-[#11372A]"
+                            : "text-gray-300"
+                        )}>
                           {section.description}
                         </p>
                       </div>
-                      <ChevronRight size={24} />
+                      {activeSection === section.id ? (
+                        <ChevronDown size={24} />
+                      ) : (
+                        <ChevronRight size={24} />
+                      )}
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
 
-            {/* Back Button */}
-            <div className="pt-8">
-              <Button
-                variant="link"
-                className="text-green-800 hover:text-green-600 flex items-center gap-2 text-lg font-semibold"
-              >
-                <ChevronLeft size={20} />
-                Volver
-              </Button>
-            </div>
+                {/* Sección desplegable */}
+                <div className={clsx(
+                  "overflow-hidden transition-all duration-500 ease-in-out",
+                  activeSection === section.id ? "max-h-[1000px] mt-3" : "max-h-0"
+                )}>
+                  <div className="space-y-4">
+                    {sectionData[section.id]?.map((member: StaffMember) => (
+                      <Card key={member.id} className="bg-white/80 backdrop-blur shadow-sm">
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h3 className="text-base md:text-lg font-semibold text-green-800">{member.username}</h3>
+                              <p className="text-gray-600">{member.role}</p>
+                            </div>
+                            <Button
+                              variant="outline"
+                              className="border-green-800 text-green-800 hover:bg-green-50 bg-transparent"
+                            >
+                              Editar Permisos
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </main>
 

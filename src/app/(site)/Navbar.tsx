@@ -117,7 +117,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
   };
 
   return (
-    <nav className="fixed top-0 z-50 w-full bg-[#11372A] font-montserrat">
+    <nav className="fixed top-0 z-50 w-full bg-[#11372A]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-8">
         <Link href="/" className="flex items-center h-20 min-w-[90px]">
           <MemoLogo />
@@ -185,7 +185,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
           ) : (
             <Link
               href="/login"
-              className="ml-4 hidden md:block bg-[#8ca62e] hover:bg-[#7fa650] text-white font-bold px-6 py-2 rounded-full transition"
+              className="ml-4 hidden md:block bg-[#6B9026] hover:bg-[#55731e] text-white font-bold px-6 py-2 rounded-full transition"
             >
               INICIAR SESIÓN
             </Link>
@@ -215,7 +215,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
 
       {/* Menú mobile */}
       {isMenuOpen && (
-        <div className="md:hidden bg-[#154134] border-t border-[#1e5943] px-6 py-4 font-montserrat">
+        <div className="md:hidden bg-[#154134] border-t border-[#1e5943] px-6 py-4">
           <nav className="flex flex-col items-center gap-4">
             {items.map((item) => (
               <Link
@@ -247,7 +247,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
             ) : (
               <Link
                 href="/login"
-                className="w-full bg-[#8ca62e] hover:bg-[#7fa650] text-white font-bold px-6 py-2 rounded-full transition text-center"
+                className="bg-[#8ca62e] hover:bg-[#7fa650] text-white font-bold px-6 py-2 rounded-full transition"
               >
                 INICIAR SESIÓN
               </Link>
