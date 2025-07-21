@@ -115,7 +115,7 @@ export default function TournamentConfig() {
             {configOptions.map((option, index) => (
               <Card
                 key={index}
-                className="bg-white/80 backdrop-blur hover:bg-white/90 transition-colors cursor-pointer"
+                className="bg-white backdrop-blur hover:bg-white/70 transition-colors cursor-pointer"
               >
                 <CardContent className="p-4 md:p-6">
                   <div className="flex items-center justify-between">

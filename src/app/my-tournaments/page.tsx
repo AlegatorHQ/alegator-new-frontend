@@ -131,7 +131,7 @@ export default function Dashboard() {
           BIENVENIDO {username}
         </h1>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-12">
           {/* Left Column */}
           <div className="space-y-6">
             {/* Create Tournament Button */}
@@ -145,7 +145,7 @@ export default function Dashboard() {
                 }}
               >
                 CREAR TORNEO NUEVO
-              </Button>
+                </Button>
             </Link>
 
             {/* User Account */}
