@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { FormButton } from "@/components/ui/FormButton";
 import Image from "next/image";
@@ -39,85 +40,32 @@ export function RegisterForm() {
 
     setLoading(true);
 
-    const { data: supabaseData, error: supabaseError } =
-      await supabase.auth.signUp({
-        email: correo,
-        password,
-        options: {
-          data: {
-            nombre,
-            apellido,
-            username,
-          },
+    const { error } = await supabase.auth.signUp({
+      email: correo,
+      password,
+      options: {
+        data: {
+          first_name: nombre,
+          last_name: apellido,
+          user_name: username, 
         },
-      });
+      },
+    });
 
-    if (supabaseError) {
-      toast.error(
-        "Error al registrarse con Supabase: " + supabaseError.message
-      );
-      setLoading(false);
-      return;
-    }
-
-    // Now, send data to Django backend for dj_rest_auth registration
-    try {
-      const backendResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: username,
-            email: correo,
-            password2: confirmarPassword,
-            password1: password,
-            first_name: nombre,
-            last_name: apellido,
-          }),
-        }
-      );
-
-      if (!backendResponse.ok) {
-        const errorData = await backendResponse.json();
-        throw new Error(
-          errorData.email
-            ? errorData.email[0]
-            : errorData.username
-              ? errorData.username[0]
-              : errorData.password
-                ? errorData.password[0]
-                : errorData.non_field_errors
-                  ? errorData.non_field_errors[0]
-                  : "Error al registrarse con el backend de Django."
-        );
-      }
-
-      // Guarda los props en sessionStorage
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem(
-          "successfulProps",
-          JSON.stringify({
-            mainMessage: "¡REGISTRO EXITOSO!",
-            buttonText: "VOLVER AL INICIO",
-            buttonHref: "/",
-            secondaryMessage: "Revisa tu correo para confirmar tu cuenta.",
-            name: `${nombre} ${apellido}`,
-          })
-        );
-      }
-      router.push("/successful");
-    } catch (error) {
-      toast.error((error as Error).message);
-    } finally {
-      setLoading(false);
-    }
     setLoading(false);
+
+    if (error) {
+      toast.error("Error al registrarse: " + error.message);
+    } else {
+      toast.success(
+        "¡Registro exitoso!"
+      );
+      router.push("/login");
+      router.refresh();
+    }
   };
 
-  return (
+   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen px-1 py-4 sm:px-2 bg-transparent">
       <div
         className="relative rounded-3xl px-2 sm:px-4 md:px-6 py-6 md:py-8 flex flex-col items-center w-full
