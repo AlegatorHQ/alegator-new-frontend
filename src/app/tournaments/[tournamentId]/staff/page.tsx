@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react"
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronRight, ChevronDown } from "lucide-react"
@@ -9,6 +10,8 @@ import Footer from "@/app/(site)/Footer"
 import clsx from "clsx"
 
 export default function TournamentStaff() {
+  const params = useParams();
+  const tournamentId = params.tournamentId as string;
   const [activeSection, setActiveSection] = useState<string>("7")
 
   const toggleSection = (id: string) => {
@@ -46,7 +49,7 @@ export default function TournamentStaff() {
 
   return (
     <div className="min-h-screen flex bg-[#ADBC9F]">
-      <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+      <Sidebar tournamentId={tournamentId} activeSection={activeSection} onSectionChange={setActiveSection} />
 
       <div className="flex-1 flex flex-col">
         <main className="flex-1 px-4 md:px-8 py-8">

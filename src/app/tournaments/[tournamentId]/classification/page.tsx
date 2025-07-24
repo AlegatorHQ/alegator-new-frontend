@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Trophy, Filter } from "lucide-react";
-import { Sidebar } from "@/components/sidebar";
+import { Sidebar } from "@/app/(site)/AdminSidebar";
 import Footer from "@/app/(site)/Footer";
 
 export default function TournamentClassification() {
+  const params = useParams();
+  const tournamentId = params.tournamentId as string;
   const [searchTerm, setSearchTerm] = useState("");
 
   const participants = [
@@ -111,8 +114,7 @@ export default function TournamentClassification() {
 
   return (
     <div className="min-h-screen flex bg-[#ADBC9F]">
-      <Sidebar />
-
+      <Sidebar tournamentId={tournamentId} />
       <div className="flex-1 flex flex-col">
         <main className="flex-1 p-8">
           <h1 className="text-4xl font-bold text-[#11372A] mb-8 text-center">CLASIFICACIÓN</h1>

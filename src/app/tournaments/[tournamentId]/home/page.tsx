@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,13 +16,16 @@ import {
   Clock,
   TrendingUp,
 } from "lucide-react";
-import { Sidebar } from "@/app/(site)/AdminSidebar";
+import { Sidebar } from "@/components/sidebar";
 import Footer from "@/app/(site)/Footer";
 
 export default function AdminTournamentHomePage() {
+  const params = useParams();
+  const tournamentId = params.tournamentId as string;
+
   const [selectedTournament] = useState({
     id: 1,
-    name: "Torneo Nacional de Debate 2024",
+    name: "Torneo Nacional de Debate 2025",
     status: "En Progreso",
     participants: 156,
     rounds: 5,
@@ -41,42 +45,42 @@ export default function AdminTournamentHomePage() {
     {
       title: "Gestionar Rondas",
       description: "Administrar el progreso de las rondas",
-      href: "/tournament/rounds",
+      href: `/tournaments/${tournamentId}/rounds`,
       icon: BarChart3,
       color: "bg-green-600",
     },
     {
       title: "Ver Clasificaciones",
       description: "Consultar rankings actuales",
-      href: "/tournament/classification",
+      href: `/tournaments/${tournamentId}/classification`,
       icon: Trophy,
       color: "bg-yellow-600",
     },
     {
       title: "Gestionar Participantes",
       description: "Administrar equipos y jueces",
-      href: "/tournament/participants",
+      href: `/tournaments/${tournamentId}/participants`,
       icon: Users,
       color: "bg-blue-600",
     },
     {
       title: "Revisar Feedback",
       description: "Gestionar comentarios y evaluaciones",
-      href: "/tournament/feedback",
+      href: `/tournaments/${tournamentId}/feedback`,
       icon: MessageSquare,
       color: "bg-purple-600",
     },
     {
       title: "Configurar Torneo",
       description: "Ajustar reglas y configuraciones",
-      href: "/tournament/config",
+      href: `/tournaments/${tournamentId}/config`,
       icon: Settings,
       color: "bg-gray-600",
     },
     {
       title: "Gestionar Staff",
       description: "Administrar personal del torneo",
-      href: "/tournament/staff",
+      href: `/tournaments/${tournamentId}/staff`,
       icon: Users,
       color: "bg-indigo-600",
     },
@@ -112,7 +116,7 @@ export default function AdminTournamentHomePage() {
 
   return (
     <div className="min-h-screen flex bg-[#ADBC9F]">
-      <Sidebar />
+      <Sidebar tournamentId={params.tournamentId} />
 
       <div className="flex-1 flex flex-col">
       <main className="flex-1 container mx-auto px-4 py-8">

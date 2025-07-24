@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,8 @@ import {
 } from "@/components/ui/select";
 import Footer from "@/app/(site)/Footer";
 import Navbar from "@/app/(site)/Navbar";
-import { createClient } from "@/lib/supabase/client";
+import  api  from "@/lib/api"; // Usaremos nuestro cliente de API
+import toast, { Toaster } from "react-hot-toast";
 
 const PALETTE = {
   bg: "#b7c7a2",
@@ -34,65 +34,63 @@ const PALETTE = {
 
 export default function CreateTournament() {
   const router = useRouter();
-  const supabase = createClient();
   const [formData, setFormData] = useState({
     name: "",
-    initials: "",
-    qualifiers: "",
-    eliminations: "",
-    location: "",
-    date: "",
-    teamRanking: "",
-    judgeRanking: "",
+    shortname: "",
+    place: "",
+    start_date: "",
+    end_date: "",
+    description_tournament: "", // Added description field
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
-    if (
-      !formData.name ||
-      !formData.initials ||
-      !formData.qualifiers ||
-      !formData.eliminations ||
-      !formData.location ||
-      !formData.date ||
-      !formData.teamRanking ||
-      !formData.judgeRanking
-    ) {
-      setError("Completa todos los campos.");
+    
+    if (!formData.name || !formData.shortname || !formData.place || !formData.start_date || !formData.end_date) {
+      toast.error("Por favor, completa todos los campos.");
       return;
     }
 
     setLoading(true);
+    const toastId = toast.loading("Creando torneo...");
 
-    const { error: dbError } = await supabase.from("tournaments").insert([
-      {
+    try {
+      interface CreateTournamentResponse {
+        id: number | string;
+      }
+      // Mapeamos los datos del formulario al formato esperado por el backend
+      const payload = {
         name: formData.name,
-        initials: formData.initials,
-        qualifiers: Number(formData.qualifiers),
-        eliminations: formData.eliminations,
-        location: formData.location,
-        date: formData.date,
-        team_ranking: formData.teamRanking,
-        judge_ranking: formData.judgeRanking,
-      },
-    ]);
+        shortname: formData.shortname,
+        place: formData.place,
+        start_date: formData.start_date,
+        end_date: formData.end_date,
+        description_tournament: formData.description_tournament, // Added description to payload
+        // Valores por defecto que el backend espera
+        tournament_status: "upcoming",
+        avoid_same_institution: true,
+        missing_feedbacks: false,
+        check_in: true,
+      };
 
-    setLoading(false);
+      const responseData = await api.post("api/v1/tournaments/", {
+        json: payload,
+      }).json<CreateTournamentResponse>();
 
-    if (dbError) {
-      setError("Error al crear el torneo. Intenta de nuevo.");
-      return;
+      toast.success("Torneo creado con éxito", { id: toastId }); 
+      router.push(`/tournaments/${responseData.id}/home`);
+
+    } catch (error) {
+      console.error("Error creating tournament:", error);
+      toast.error("Hubo un error al crear el torneo. Inténtalo de nuevo.", { id: toastId });
+    } finally {
+      setLoading(false);
     }
-
-    router.push("/tournament/config");
   };
 
   // Demo handler
-  const handleDemo = async () => {
+  /* const handleDemo = async () => {
     setLoading(true);
     await supabase.from("tournaments").insert([
       {
@@ -108,7 +106,7 @@ export default function CreateTournament() {
     ]);
     setLoading(false);
     router.push("/tournament/config");
-  };
+  }; */
 
   return (
     <div
@@ -116,6 +114,7 @@ export default function CreateTournament() {
       style={{ background: PALETTE.bg }}
     >
       <Navbar />
+      <Toaster position="top-right" />
 
       <main className="flex-1 container mx-auto px-4 py-8 flex flex-col items-center mt-24">
         <h1
@@ -159,7 +158,7 @@ export default function CreateTournament() {
               fontSize: "1rem",
               padding: "0.5rem 1.5rem",
             }}
-            onClick={handleDemo}
+            onClick={() => {}}
             disabled={loading}
           >
             Torneo Demo
@@ -213,16 +212,16 @@ export default function CreateTournament() {
             </div>
             <div>
               <Label
-                htmlFor="initials"
+                htmlFor="shortname"
                 style={{ color: PALETTE.text, fontSize: "1.1rem" }}
               >
                 SIGLAS
               </Label>
               <Input
-                id="initials"
-                value={formData.initials}
+                id="shortname"
+                value={formData.shortname}
                 onChange={(e) =>
-                  setFormData({ ...formData, initials: e.target.value })
+                  setFormData({ ...formData, shortname: e.target.value })
                 }
                 style={{
                   background: PALETTE.accent,
@@ -237,82 +236,19 @@ export default function CreateTournament() {
                 required
               />
             </div>
+
             <div>
               <Label
-                htmlFor="qualifiers"
-                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
-              >
-                N° DE CLASIFICATORIAS
-              </Label>
-              <Input
-                id="qualifiers"
-                type="number"
-                min={1}
-                value={formData.qualifiers}
-                onChange={(e) =>
-                  setFormData({ ...formData, qualifiers: e.target.value })
-                }
-                style={{
-                  background: PALETTE.accent,
-                  color: PALETTE.text,
-                  fontWeight: "bold",
-                  borderRadius: "12px",
-                  border: "none",
-                  marginTop: "6px",
-                  fontSize: "1.15rem",
-                  padding: "0.75rem",
-                }}
-                required
-              />
-            </div>
-            <div>
-              <Label
-                htmlFor="eliminations"
-                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
-              >
-                ELIMINATORIAS
-              </Label>
-              <Select
-                value={formData.eliminations}
-                onValueChange={(value: string) =>
-                  setFormData({ ...formData, eliminations: value })
-                }
-                required
-              >
-                <SelectTrigger
-                  style={{
-                    background: PALETTE.accent,
-                    color: PALETTE.text,
-                    fontWeight: "bold",
-                    borderRadius: "12px",
-                    border: "none",
-                    marginTop: "6px",
-                    fontSize: "1.15rem",
-                    padding: "0.75rem",
-                  }}
-                >
-                  <SelectValue placeholder="Seleccionar" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Octavos">Octavos</SelectItem>
-                  <SelectItem value="Cuartos">Cuartos</SelectItem>
-                  <SelectItem value="Semifinal">Semifinal</SelectItem>
-                  <SelectItem value="Final">Final</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label
-                htmlFor="location"
+                htmlFor="place"
                 style={{ color: PALETTE.text, fontSize: "1.1rem" }}
               >
                 LUGAR
               </Label>
               <Input
-                id="location"
-                value={formData.location}
+                id="place"
+                value={formData.place}
                 onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
+                  setFormData({ ...formData, place: e.target.value })
                 }
                 style={{
                   background: PALETTE.accent,
@@ -329,17 +265,17 @@ export default function CreateTournament() {
             </div>
             <div>
               <Label
-                htmlFor="date"
+                htmlFor="start_date"
                 style={{ color: PALETTE.text, fontSize: "1.1rem" }}
               >
-                FECHA
+                FECHA DE INICIO
               </Label>
               <Input
-                id="date"
+                id="start_date"
                 type="date"
-                value={formData.date}
+                value={formData.start_date}
                 onChange={(e) =>
-                  setFormData({ ...formData, date: e.target.value })
+                  setFormData({ ...formData, start_date: e.target.value })
                 }
                 style={{
                   background: PALETTE.accent,
@@ -354,83 +290,61 @@ export default function CreateTournament() {
                 required
               />
             </div>
-            <div>
+             <div>
               <Label
-                htmlFor="teamRanking"
+                htmlFor="end_date"
                 style={{ color: PALETTE.text, fontSize: "1.1rem" }}
               >
-                CLASIFICACIÓN DE EQUIPO
+                FECHA DE FIN
               </Label>
-              <Select
-                value={formData.teamRanking}
-                onValueChange={(value: string) =>
-                  setFormData({ ...formData, teamRanking: value })
+              <Input
+                id="end_date"
+                type="date"
+                value={formData.end_date}
+                onChange={(e) =>
+                  setFormData({ ...formData, end_date: e.target.value })
                 }
+                style={{
+                  background: PALETTE.accent,
+                  color: PALETTE.text,
+                  fontWeight: "bold",
+                  borderRadius: "12px",
+                  border: "none",
+                  marginTop: "6px",
+                  fontSize: "1.15rem",
+                  padding: "0.75rem",
+                }}
                 required
-              >
-                <SelectTrigger
-                  style={{
-                    background: PALETTE.accent,
-                    color: PALETTE.text,
-                    fontWeight: "bold",
-                    borderRadius: "12px",
-                    border: "none",
-                    marginTop: "6px",
-                    fontSize: "1.15rem",
-                    padding: "0.75rem",
-                  }}
-                >
-                  <SelectValue placeholder="Seleccionar" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="General">General</SelectItem>
-                  <SelectItem value="Novato">Novato</SelectItem>
-                  <SelectItem value="Mixto">Mixto</SelectItem>
-                </SelectContent>
-              </Select>
+              />
             </div>
-            <div>
-              <Label
-                htmlFor="judgeRanking"
-                style={{ color: PALETTE.text, fontSize: "1.1rem" }}
-              >
-                CLASIFICACIÓN DE JUEZ
-              </Label>
-              <Select
-                value={formData.judgeRanking}
-                onValueChange={(value: string) =>
-                  setFormData({ ...formData, judgeRanking: value })
-                }
-                required
-              >
-                <SelectTrigger
-                  style={{
-                    background: PALETTE.accent,
-                    color: PALETTE.text,
-                    fontWeight: "bold",
-                    borderRadius: "12px",
-                    border: "none",
-                    marginTop: "6px",
-                    fontSize: "1.15rem",
-                    padding: "0.75rem",
-                  }}
-                >
-                  <SelectValue placeholder="Seleccionar" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="General">General</SelectItem>
-                  <SelectItem value="Novato">Novato</SelectItem>
-                  <SelectItem value="Mixto">Mixto</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          {error && (
-            <div className="text-red-600 font-semibold text-center text-lg">
-              {error}
-            </div>
-          )}
+          </div>
+          <div>
+            <Label
+              htmlFor="description_tournament"
+              style={{ color: PALETTE.text, fontSize: "1.1rem" }}
+            >
+              DESCRIPCIÓN
+            </Label>
+            <Textarea
+              id="description_tournament"
+              value={formData.description_tournament}
+              onChange={(e) =>
+                setFormData({ ...formData, description_tournament: e.target.value })
+              }
+              style={{
+                background: PALETTE.accent,
+                color: PALETTE.text,
+                fontWeight: "bold",
+                borderRadius: "12px",
+                border: "none",
+                marginTop: "6px",
+                fontSize: "1.15rem",
+                padding: "0.75rem",
+                minHeight: "100px",
+              }}
+            />
+          </div>
 
           <div className="flex gap-6 pt-2 justify-between">
             <Button

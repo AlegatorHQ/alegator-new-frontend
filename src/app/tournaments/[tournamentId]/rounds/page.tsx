@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react"
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { Sidebar } from "@/components/sidebar"
 import { StepIndicator } from "@/components/step-indicator"
 import { RoundSelection } from "@/components/round-selection"
@@ -16,6 +17,8 @@ import Footer from "@/app/(site)/Footer";
 const stepLabels = ["Selección", "Check-in", "Emparejamientos", "Moción", "Votación", "Resultados"]
 
 export default function TournamentApp() {
+  const params = useParams();
+  const tournamentId = params.tournamentId as string;
   const [activeSection, setActiveSection] = useState("rondas")
   const {
     tournament,
@@ -30,7 +33,7 @@ export default function TournamentApp() {
     submitBallot,
     publishResults,
     returnToRoundSelection,
-  } = useTournament()
+  } = useTournament(tournamentId)
 
   const handleBackToRounds = () => {
     returnToRoundSelection()
@@ -102,7 +105,7 @@ export default function TournamentApp() {
   if (activeSection !== "rondas") {
     return (
       <div className="flex h-screen bg-[#f5f5f5]">
-        <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+        <Sidebar tournamentId={tournamentId} activeSection={activeSection} onSectionChange={setActiveSection} />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-[#333333] mb-4">Sección en Desarrollo</h2>
@@ -115,7 +118,7 @@ export default function TournamentApp() {
 
   return (
     <div className="flex h-screen bg-[#ADBC9F]">
-      <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+      <Sidebar tournamentId={tournamentId} activeSection={activeSection} onSectionChange={setActiveSection} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}

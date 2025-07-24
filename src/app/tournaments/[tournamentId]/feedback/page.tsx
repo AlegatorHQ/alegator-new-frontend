@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,46 +18,15 @@ import {
   UserX,
   BarChart3,
 } from "lucide-react";
-import { Sidebar } from "@/app/(site)/AdminSidebar";
+import { Sidebar } from "@/components/sidebar";
 import Navbar, { NavbarItem } from "@/app/(site)/Navbar";
 import Footer from "@/app/(site)/Footer";
 
-const sidebarItems: NavbarItem[] = [
-  { href: "/tournament/home", label: "Inicio", icon: <Home size={20} /> },
-  {
-    href: "/tournament/config",
-    label: "Configurar Torneo",
-    icon: <Settings size={20} />,
-  },
-  {
-    href: "/tournament/classification",
-    label: "Clasificación",
-    icon: <Trophy size={20} />,
-  },
-  {
-    href: "/tournament/rounds",
-    label: "Rondas",
-    icon: <BarChart3 size={20} />,
-  },
-  {
-    href: "/tournament/participants",
-    label: "Participantes",
-    icon: <Users size={20} />,
-  },
-  {
-    href: "/tournament/feedback",
-    label: "Feedback",
-    icon: <MessageSquare size={20} />,
-  },
-  { href: "/tournament/staff", label: "Staff", icon: <UserCheck size={20} /> },
-  {
-    href: "/tournament/incompatibility",
-    label: "Incompatibilidad",
-    icon: <UserX size={20} />,
-  },
-];
+
 
 export default function TournamentFeedback() {
+  const params = useParams();
+  const tournamentId = params.tournamentId as string;
   const [searchTerm, setSearchTerm] = useState("");
   const [isMobile, setIsMobile] = useState(false);
 
@@ -189,7 +159,7 @@ const feedbackEntries = [
     <div className="flex flex-1 pt-20 md:pt-0">
       {/* Sidebar solo en desktop */}
       <div className="hidden md:block">
-        <Sidebar />
+        <Sidebar tournamentId={tournamentId} />
       </div>
 
       <div className="flex-1 flex flex-col">

@@ -10,6 +10,7 @@ import { ChevronRight, User, Settings, LogOut } from "lucide-react";
 import Footer from "@/app/(site)/Footer";
 import Navbar from "@/app/(site)/Navbar";
 import { createClient } from "@/lib/supabase/client";
+import  api  from "@/lib/api";
 import Image from "next/image";
 
 const PALETTE = {
@@ -24,26 +25,32 @@ const PALETTE = {
   white: "#fff",
 };
 
+interface MyTournament {
+    role: string;
+    tournament: {
+        id: string;
+        name: string;
+        tournament_status?: string; 
+    }
+}
+
 export default function Dashboard() {
-  const [tournaments, setTournaments] = useState<any[]>([]);
-  const [participatedTournaments, setParticipatedTournaments] = useState<any[]>(
-    []
-  );
+  const [myTournaments, setMyTournaments] = useState<MyTournament[]>([]);
   const [username, setUsername] = useState("");
   const [userCode, setUserCode] = useState("");
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState<"created" | "participated">(
-    "created"
+  const [selectedTab, setSelectedTab] = useState<"admin" | "participant">(
+    "admin"
   );
   const [avatar, setAvatar] = useState("/avatars/avatar1.png");
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUserAndTournaments = async () => {
+    const fetchUserData = async () => {
+      setLoading(true);
       const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
+      
       if (user) {
         setUsername(user.user_metadata?.username || user.email || "Usuario");
         setUserCode(user.id?.slice(0, 7) || "------");
@@ -55,54 +62,18 @@ export default function Dashboard() {
           setAvatar(data.avatar || "/avatars/avatar1.png");
         }
 
-        // Torneos creados por el usuario
-        const { data: createdData, error: createdError } = await supabase
-          .from("tournaments")
-          .select("*")
-          .eq("created_by", user.id);
-
-        if (!createdError && createdData) {
-          setTournaments(createdData);
+        try {
+          const tournamentsData: MyTournament[] = await api.get("api/v1/users/me/tournaments/").json();
+          setMyTournaments(tournamentsData);
+        } catch (error) {
+          console.error("Error fetching tournaments:", error);
+          // Opcional: mostrar un toast de error al usuario
         }
 
-        // Torneos en los que participa el usuario
-        const { data: participantData, error: participantError } =
-          await supabase
-            .from("tournament_participants")
-            .select("tournament_id, status")
-            .eq("user_id", user.id);
-
-        if (
-          !participantError &&
-          participantData &&
-          participantData.length > 0
-        ) {
-          const tournamentIds = participantData.map(
-            (p: any) => p.tournament_id
-          );
-          const { data: tournamentsData, error: tournamentsError } =
-            await supabase
-              .from("tournaments")
-              .select("*")
-              .in("id", tournamentIds);
-
-          if (!tournamentsError && tournamentsData) {
-            const tournamentsWithStatus = tournamentsData.map((t) => {
-              const participant = participantData.find(
-                (p: any) => p.tournament_id === t.id
-              );
-              return {
-                ...t,
-                status: participant?.status || "Pendiente",
-              };
-            });
-            setParticipatedTournaments(tournamentsWithStatus);
-          }
-        }
       }
       setLoading(false);
     };
-    fetchUserAndTournaments();
+    fetchUserData();
   }, []);
 
   const handleEditAccount = () => {
@@ -115,9 +86,11 @@ export default function Dashboard() {
     router.replace("/login");
   };
 
-  // Decide qué lista mostrar
+  const createdTournaments = myTournaments.filter(t => t.role === 'admin' || t.role === 'organizer');
+  const participatedTournaments = myTournaments.filter(t => t.role !== 'admin' && t.role !== 'organizer');
+
   const tournamentsToShow =
-    selectedTab === "created" ? tournaments : participatedTournaments;
+    selectedTab === "admin" ? createdTournaments : participatedTournaments;
 
   return (
     <div
@@ -135,7 +108,7 @@ export default function Dashboard() {
           {/* Left Column */}
           <div className="space-y-6">
             {/* Create Tournament Button */}
-            <Link href="/tournament/create">
+            <Link href="/tournaments/create">
               <Button
                 className="w-full py-6 text-xl font-bold rounded-full"
                 style={{
@@ -145,7 +118,7 @@ export default function Dashboard() {
                 }}
               >
                 CREAR TORNEO NUEVO
-                </Button>
+              </Button>
             </Link>
 
             {/* User Account */}
@@ -232,35 +205,35 @@ export default function Dashboard() {
                 <div className="flex flex-col gap-2">
                   <Button
                     className={`w-full flex items-center justify-between font-montserrat text-base sm:text-lg rounded-full py-2 px-8 transition ${
-                      selectedTab === "created" ? "font-bold" : ""
+                      selectedTab === "admin" ? "font-bold" : ""
                     }`}
                     style={{
                       background:
-                        selectedTab === "created" ? PALETTE.text : PALETTE.card,
+                        selectedTab === "admin" ? PALETTE.text : PALETTE.card,
                       color:
-                        selectedTab === "created"
+                        selectedTab === "admin"
                           ? PALETTE.white
                           : PALETTE.text,
                       border: `2px solid ${PALETTE.text}`,
                     }}
-                    onClick={() => setSelectedTab("created")}
+                    onClick={() => setSelectedTab("admin")}
                   >
                     <span>Tus torneos</span>
                     <ChevronRight size={16} />
                   </Button>
                   <Button
                     className={`w-full flex items-center justify-between font-montserrat text-base sm:text-lg rounded-full py-2 px-8 transition ${
-                      selectedTab === "participated" ? "font-bold" : ""
+                      selectedTab === "participant" ? "font-bold" : ""
                     }`}
                     style={{
                       background:
-                        selectedTab === "participated"
+                        selectedTab === "participant"
                           ? PALETTE.yellow
                           : PALETTE.card,
                       color: PALETTE.text,
                       border: `2px solid ${PALETTE.text}`,
                     }}
-                    onClick={() => setSelectedTab("participated")}
+                    onClick={() => setSelectedTab("participant")}
                   >
                     <span>Torneos en los que participaste</span>
                     <ChevronRight size={16} />
@@ -278,8 +251,8 @@ export default function Dashboard() {
             >
               <CardHeader>
                 <CardTitle style={{ color: PALETTE.text }}>
-                  {selectedTab === "created"
-                    ? "TUS TORNEOS"
+                  {selectedTab === "admin"
+                    ? "TUS TORNEOS CREADOS"
                     : "TORNEOS EN LOS QUE PARTICIPASTE"}
                 </CardTitle>
               </CardHeader>
@@ -293,12 +266,12 @@ export default function Dashboard() {
                     className="text-center"
                     style={{ color: PALETTE.textSecondary }}
                   >
-                    {selectedTab === "created"
+                    {selectedTab === "admin"
                       ? "No has creado ningún torneo."
                       : "No has participado en ningún torneo."}
                   </div>
                 ) : (
-                  tournamentsToShow.map((tournament) => (
+                  tournamentsToShow.map(({ tournament, role }) => (
                     <div
                       key={tournament.id}
                       className="flex items-center justify-between py-3 border-b last:border-b-0"
@@ -306,24 +279,19 @@ export default function Dashboard() {
                       <div className="flex items-center gap-4">
                         <Badge
                           variant={
-                            tournament.status === "Terminado"
+                            tournament.tournament_status === "finished"
                               ? "default"
                               : "secondary"
                           }
-                          className={
-                            tournament.status === "Terminado"
-                              ? "bg-green-600"
-                              : "bg-yellow-500"
-                          }
                           style={{
                             background:
-                              tournament.status === "Terminado"
+                              tournament.tournament_status === "finished"
                                 ? PALETTE.green
                                 : PALETTE.yellow,
                             color: PALETTE.text,
                           }}
                         >
-                          {tournament.status === "Terminado" ? "T" : "P"}
+                          {tournament.tournament_status === "finished" ? "F" : "A"}
                         </Badge>
                         <div>
                           <p
@@ -333,25 +301,25 @@ export default function Dashboard() {
                             {tournament.name}
                           </p>
                           <p
-                            className="text-sm"
+                            className="text-sm capitalize"
                             style={{ color: PALETTE.textSecondary }}
                           >
-                            {tournament.status || "Pendiente"}
+                            {tournament.tournament_status || "Pendiente"}
                           </p>
                         </div>
                       </div>
-                      <Button
-                        variant="link"
-                        className="text-green-800 hover:text-green-600"
-                        style={{
-                          color: PALETTE.text,
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {tournament.status === "Terminado"
-                          ? "Ver Clasificación"
-                          : "Ver Detalles"}
-                      </Button>
+                      <Link href={`/tournaments/${tournament.id}/home`} passHref>
+                        <Button
+                          variant="link"
+                          className="text-green-800 hover:text-green-600"
+                          style={{
+                            color: PALETTE.text,
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Ir al panel
+                        </Button>
+                      </Link>
                     </div>
                   ))
                 )}
