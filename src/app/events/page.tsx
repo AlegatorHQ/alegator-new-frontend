@@ -3,153 +3,145 @@
 import { EventCard } from "@/components/EventCard";
 import Footer from "@/app/(site)/Footer";
 import Navbar from "@/app/(site)/Navbar";
-import { useState, useMemo } from "react";
-
-// Sample event data
-const events = [
-  {
-    id: 1,
-    name: "Torneo de Padel",
-    startDate: "2025-07-15T10:00:00",
-    endDate: "2025-07-17T18:00:00",
-    description: "Torneo amateur de padel en las canchas de césped.",
-    image: "/hoja-verde-completa.png",
-    location: "Cancha de Padel, Boquete",
-  },
-  {
-    id: 2,
-    name: "Campeonato de League of Legends",
-    startDate: "2025-08-01T15:00:00",
-    endDate: "2025-08-03T22:00:00",
-    description: "Competencia online de League of Legends para la comunidad.",
-    image: "/hoja-verde-completa.png",
-    location: "Virtual",
-  },
-  {
-    id: 3,
-    name: "Noche de Juegos de Mesa",
-    startDate: "2025-06-20T18:00:00",
-    endDate: "2025-06-20T23:00:00",
-    description: "Una noche relajada con una gran variedad de juegos de mesa.",
-    image: "/hoja-verde-completa.png",
-    location: "Ciudad del Saber",
-  },
-  {
-    id: 4,
-    name: "Maratón de Programación",
-    startDate: "2025-07-15T09:00:00",
-    endDate: "2025-07-16T09:00:00",
-    description: "Hackathon de 24 horas para desarrollar nuevas aplicaciones.",
-    image: "/hoja-verde-completa.png",
-    location: "Hotel El Panamá",
-  },
-  {
-    id: 5,
-    name: "Torneo de Ajedrez",
-    startDate: "2025-09-10T14:00:00",
-    endDate: "2025-09-12T20:00:00",
-    description: "Torneo de ajedrez para todas las edades y niveles.",
-    image: "/hoja-verde-completa.png",
-    location: "Parque Cervantes",
-  },
-];
+import { useState, useMemo, useEffect } from "react"; 
+import api from "@/lib/api";
 
 type EventCategory = "en-curso" | "proximos" | "terminados" | "todos";
+
+interface Tournament {
+  id: number;
+  name: string;
+  description_tournament: string;
+  tournament_status: string;
+  start_date: string;
+  end_date: string;
+  place: string;
+}
+
+interface TournamentsApiResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Tournament[];
+}
 
 export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [locationFilter, setLocationFilter] = useState("todos");
   const [dateFilter, setDateFilter] = useState("all");
-  const [activeCategory, setActiveCategory] =
-    useState<EventCategory>("proximos");
+  const [activeCategory, setActiveCategory] = useState<EventCategory>("todos");
+  const [tournaments, setTournaments] = useState<Tournament[]>([]); // Raw data from API
+  const [displayedTournaments, setDisplayedTournaments] = useState<Tournament[]>([]); // Processed data for rendering
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredEvents = useMemo(() => {
-    const now = new Date();
+  useEffect(() => {
+    const fetchTournaments = async () => {
+      try {
+        const data = await api.get("api/v1/tournaments").json<TournamentsApiResponse>();
+        const fetchedTournaments = data.results as Tournament[];
+        setTournaments(fetchedTournaments);
 
-    const eventsToList = events.filter((event) => {
-      const eventStartDate = new Date(event.startDate);
-      const eventEndDate = new Date(event.endDate);
-      const matchesSearch = event.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const matchesLocation =
-        locationFilter === "todos" || event.location === locationFilter;
+        // Process data immediately after fetching
+        const now = new Date();
+        now.setHours(0, 0, 0, 0); // Normalize 'now' to the beginning of the current day
 
-      const matchesDate = (() => {
-        if (dateFilter === "all") return true;
-        const today = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate()
+        const eventsToList = fetchedTournaments.filter((event) => {
+          const eventStartDate = new Date(event.start_date + 'T00:00:00');
+          eventStartDate.setHours(0, 0, 0, 0); // Normalize event start date
+          const eventEndDate = new Date(event.end_date + 'T00:00:00');
+          eventEndDate.setHours(0, 0, 0, 0); // Normalize event end date
+          const matchesSearch = event.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
+          const matchesLocation =
+            locationFilter === "todos" || event.place === locationFilter;
+
+          const matchesDate = (() => {
+            if (dateFilter === "all") return true;
+            const today = new Date(
+              now.getFullYear(),
+              now.getMonth(),
+              now.getDate()
+            );
+            const eventStartDay = new Date(
+              eventStartDate.getFullYear(),
+              eventStartDate.getMonth(),
+              eventStartDate.getDate()
+            );
+
+            switch (dateFilter) {
+              case "today":
+                return eventStartDay.getTime() === today.getTime();
+              case "this_week":
+                const firstDayOfWeek = new Date(today);
+                firstDayOfWeek.setDate(today.getDate() - today.getDay());
+                const lastDayOfWeek = new Date(firstDayOfWeek);
+                lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+                return (
+                  eventStartDay >= firstDayOfWeek && eventStartDay <= lastDayOfWeek
+                );
+              case "this_month":
+                return (
+                  eventStartDate.getFullYear() === today.getFullYear() &&
+                  eventStartDate.getMonth() === today.getMonth()
+                );
+              case "previous_month":
+                const previousMonth = new Date(
+                  today.getFullYear(),
+                  today.getMonth() - 1,
+                  1
+                );
+                return (
+                  eventStartDate.getFullYear() === previousMonth.getFullYear() &&
+                  eventStartDate.getMonth() === previousMonth.getMonth()
+                );
+              case "next_month":
+                const nextMonth = new Date(
+                  today.getFullYear(),
+                  today.getMonth() + 1,
+                  1
+                );
+                return (
+                  eventStartDate.getFullYear() === nextMonth.getFullYear() &&
+                  eventStartDate.getMonth() === nextMonth.getMonth()
+                );
+              default:
+                return true;
+            }
+          })();
+
+          if (!matchesSearch || !matchesLocation || !matchesDate) return false;
+
+          switch (activeCategory) {
+            case "en-curso":
+              return now >= eventStartDate && now <= eventEndDate;
+            case "proximos":
+              return eventStartDate > now;
+            case "terminados":
+              return eventEndDate < now;
+            case "todos":
+              return true;
+            default:
+              return true;
+          }
+        });
+
+        const sortedEvents = eventsToList.sort(
+          (a, b) =>
+            new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
         );
-        const eventStartDay = new Date(
-          eventStartDate.getFullYear(),
-          eventStartDate.getMonth(),
-          eventStartDate.getDate()
-        );
+        setDisplayedTournaments(sortedEvents);
 
-        switch (dateFilter) {
-          case "today":
-            return eventStartDay.getTime() === today.getTime();
-          case "this_week":
-            const firstDayOfWeek = new Date(today);
-            firstDayOfWeek.setDate(today.getDate() - today.getDay());
-            const lastDayOfWeek = new Date(firstDayOfWeek);
-            lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
-            return (
-              eventStartDay >= firstDayOfWeek && eventStartDay <= lastDayOfWeek
-            );
-          case "this_month":
-            return (
-              eventStartDate.getFullYear() === today.getFullYear() &&
-              eventStartDate.getMonth() === today.getMonth()
-            );
-          case "previous_month":
-            const previousMonth = new Date(
-              today.getFullYear(),
-              today.getMonth() - 1,
-              1
-            );
-            return (
-              eventStartDate.getFullYear() === previousMonth.getFullYear() &&
-              eventStartDate.getMonth() === previousMonth.getMonth()
-            );
-          case "next_month":
-            const nextMonth = new Date(
-              today.getFullYear(),
-              today.getMonth() + 1,
-              1
-            );
-            return (
-              eventStartDate.getFullYear() === nextMonth.getFullYear() &&
-              eventStartDate.getMonth() === nextMonth.getMonth()
-            );
-          default:
-            return true;
-        }
-      })();
-
-      if (!matchesSearch || !matchesLocation || !matchesDate) return false;
-
-      switch (activeCategory) {
-        case "en-curso":
-          return now >= eventStartDate && now <= eventEndDate;
-        case "proximos":
-          return eventStartDate > now;
-        case "terminados":
-          return eventEndDate < now;
-        case "todos":
-          return true;
-        default:
-          return true;
+      } catch (e: any) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
       }
-    });
+    };
 
-    return eventsToList.sort(
-      (a, b) =>
-        new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-    );
-  }, [searchQuery, locationFilter, dateFilter, activeCategory]);
+    fetchTournaments();
+  }, [searchQuery, locationFilter, dateFilter, activeCategory]); // Dependencies for re-processing when filters change
 
   const getCategoryTitle = () => {
     switch (activeCategory) {
@@ -163,6 +155,22 @@ export default function EventsPage() {
         return "Todos los Eventos";
     }
   };
+
+  if (loading) {
+    return (
+      <div className="bg-[#ADBC9F] min-h-screen flex flex-col items-center justify-center">
+        <p className="text-[#11372A] text-xl">Cargando torneos...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-[#ADBC9F] min-h-screen flex flex-col items-center justify-center">
+        <p className="text-red-500 text-xl">Error al cargar torneos: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#ADBC9F] min-h-screen flex flex-col">
@@ -253,16 +261,16 @@ export default function EventsPage() {
 
         {/* Events Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
-          {filteredEvents.length > 0 ? (
-            filteredEvents.map((event) => (
+          {displayedTournaments.length > 0 ? (
+            displayedTournaments.map((event) => (
               <EventCard
                 key={event.id}
                 id={event.id}
                 name={event.name}
-                startDate={event.startDate}
-                endDate={event.endDate}
-                description={event.description}
-                location={event.location}
+                startDate={event.start_date}
+                endDate={event.end_date}
+                description={event.description_tournament}
+                location={event.place}
               />
             ))
           ) : (

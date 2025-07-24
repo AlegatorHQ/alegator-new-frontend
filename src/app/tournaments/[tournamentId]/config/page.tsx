@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import {
   ChevronRight,
   Home,
@@ -13,44 +14,11 @@ import {
   BarChart3,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sidebar } from "@/app/(site)/AdminSidebar";
+import { Sidebar } from "@/components/sidebar";
 import Navbar, { NavbarItem } from "@/app/(site)/Navbar";
 import Footer from "@/app/(site)/Footer";
 
-const sidebarItems: NavbarItem[] = [
-  { href: "/tournament/home", label: "Inicio", icon: <Home size={20} /> },
-  {
-    href: "/tournament/config",
-    label: "Configurar Torneo",
-    icon: <Settings size={20} />,
-  },
-  {
-    href: "/tournament/classification",
-    label: "Clasificación",
-    icon: <Trophy size={20} />,
-  },
-  {
-    href: "/tournament/rounds",
-    label: "Rondas",
-    icon: <BarChart3 size={20} />,
-  },
-  {
-    href: "/tournament/participants",
-    label: "Participantes",
-    icon: <Users size={20} />,
-  },
-  {
-    href: "/tournament/feedback",
-    label: "Feedback",
-    icon: <MessageSquare size={20} />,
-  },
-  { href: "/tournament/staff", label: "Staff", icon: <UserCheck size={20} /> },
-  {
-    href: "/tournament/incompatibility",
-    label: "Incompatibilidad",
-    icon: <UserX size={20} />,
-  },
-];
+
 
 const configOptions = [
   {
@@ -86,6 +54,8 @@ const configOptions = [
 ];
 
 export default function TournamentConfig() {
+  const params = useParams();
+  const tournamentId = params.tournamentId as string;
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -103,7 +73,7 @@ export default function TournamentConfig() {
       {isMobile && <Navbar items={sidebarItems} />}
 
       {/* Sidebar solo en desktop */}
-      {!isMobile && <Sidebar />}
+      {!isMobile && <Sidebar tournamentId={tournamentId} />}
 
       <div className="flex-1 flex flex-col">
         <main className="flex-1 container mx-auto px-4 py-8 md:mt-0 mt-16">

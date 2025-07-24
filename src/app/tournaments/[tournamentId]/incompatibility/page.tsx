@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react"
+import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -18,6 +19,8 @@ type IncompatibilityState = {
 };
 
 export default function TournamentIncompatibility() {
+  const params = useParams();
+  const tournamentId = params.tournamentId as string;
   const [incompatibilities, setIncompatibilities] = useState<IncompatibilityState>({
     "Juez - Equipo": [
       { id: 1, judge: "Dr. Roberto Silva", team: "Equipo Alpha" },
@@ -82,7 +85,7 @@ export default function TournamentIncompatibility() {
 
   return (
     <div className="min-h-screen flex bg-[#ADBC9F]">
-      <Sidebar />
+      <Sidebar tournamentId={tournamentId} />
 
       <div className="flex-1 flex flex-col">
         <main className="flex-1 p-6 sm:p-8">

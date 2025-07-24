@@ -17,42 +17,46 @@ import AlegatorLogo from "@/assets/alegator-logo.svg";
 import Navbar, { NavbarItem } from "./Navbar";
 import { useEffect, useState } from "react";
 
+interface AdminSidebarProps {
+  tournamentId: string;
+}
+
 const sidebarItems: NavbarItem[] = [
-  { href: "/tournament/home", label: "Inicio", icon: <Home size={20} /> },
+  { href: "/tournaments/[tournamentId]/home", label: "Inicio", icon: <Home size={20} /> },
   {
-    href: "/tournament/config",
+    href: "/tournaments/[tournamentId]/config",
     label: "Configurar Torneo",
     icon: <Settings size={20} />,
   },
   {
-    href: "/tournament/classification",
+    href: "/tournaments/[tournamentId]/classification",
     label: "Clasificación",
     icon: <Trophy size={20} />,
   },
   {
-    href: "/tournament/rounds",
+    href: "/tournaments/[tournamentId]/rounds",
     label: "Rondas",
     icon: <BarChart3 size={20} />,
   },
   {
-    href: "/tournament/participants",
+    href: "/tournaments/[tournamentId]/participants",
     label: "Participantes",
     icon: <Users size={20} />,
   },
   {
-    href: "/tournament/feedback",
+    href: "/tournaments/[tournamentId]/feedback",
     label: "Feedback",
     icon: <MessageSquare size={20} />,
   },
-  { href: "/tournament/staff", label: "Staff", icon: <UserCheck size={20} /> },
+  { href: "/tournaments/[tournamentId]/staff", label: "Staff", icon: <UserCheck size={20} /> },
   {
-    href: "/tournament/incompatibility",
+    href: "/tournaments/[tournamentId]/incompatibility",
     label: "Incompatibilidad",
     icon: <UserX size={20} />,
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ tournamentId }: AdminSidebarProps) {
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
 
@@ -70,15 +74,18 @@ export function Sidebar() {
     return (
       <nav className="w-full bg-[#11372A] font-montserrat px-4 py-4">
         <div className="flex flex-col items-center gap-4">
-          {sidebarItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-white font-bold text-lg w-full text-center py-2 rounded transition hover:bg-[#1e5943]"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {sidebarItems.map((item) => {
+            const finalHref = item.href.replace('[tournamentId]', tournamentId);
+            return (
+              <Link
+                key={item.href}
+                href={finalHref}
+                className="text-white font-bold text-lg w-full text-center py-2 rounded transition hover:bg-[#1e5943]"
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </div>
       </nav>
     );
@@ -102,12 +109,13 @@ export function Sidebar() {
 
       <nav className="space-y-2">
         {sidebarItems.map((item) => {
-          const isActive = pathname === item.href;
+          const finalHref = item.href.replace('[tournamentId]', tournamentId);
+          const isActive = pathname === finalHref;
 
           return (
             <Link
               key={item.href}
-              href={item.href}
+              href={finalHref}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
                   ? "bg-green-600 text-white"
