@@ -4,6 +4,33 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import RegistrationForm from "@/components/RegistrationForm";
 import Navbar from "@/app/(site)/Navbar";
 import Footer from "@/app/(site)/Footer";
+import { useParams } from "next/navigation";
+import api from "@/lib/api";
+import toast from "react-hot-toast";
+
+interface UserResponse {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
+
+interface SpeakerResponse {
+  id: number;
+  tournament: number;
+  user: number;
+  province: string;
+  delegation: string;
+  is_novice: boolean;
+}
+
+interface TeamResponse {
+  id: number;
+  tournament: number;
+  name: string;
+  speaker_1: number;
+  speaker_2: number;
+}
 
 // Step 1: Team Type Selection Component
 const Step1TeamType = ({
@@ -253,6 +280,91 @@ const Step3Success = ({ formData }: { formData: any }) => (
 
 export default function RegisterTeamPage() {
   const steps = ["Tipo de Equipo", "Detalles del Equipo", "Registro Exitoso"];
+  const params = useParams();
+
+  const handleStep1Submit = (
+    type: "independent" | "mixed" | "institutional",
+    updateFormData: any, // Add updateFormData as a parameter
+    nextStep: any // Add nextStep as a parameter
+  ) => {
+    updateFormData({ teamType: type });
+    nextStep();
+  };
+
+  const handleStep2Submit = async (
+    data: any,
+    updateFormData: any,
+    nextStep: any
+  ) => {
+    const tournamentId = params.id as string;
+    if (!tournamentId) {
+      toast.error("ID del torneo no encontrado.");
+      return;
+    }
+
+    try {
+      // 1. Obtener user_id del usuario autenticado (Orador 1)
+      const currentUser = await api.get("api/v1/users/me/").json<UserResponse>();
+      const participant1UserId = currentUser.id;
+      console.log("Participant 1 User ID:", participant1UserId);
+
+      // 2. Obtener user_id del Orador 2 por email
+      let participant2UserId: number;
+      try {
+        const participant2User = await api.get(`api/v1/users/by-email/?email=${data.participant2Email}`).json<UserResponse>();
+        participant2UserId = participant2User.id;
+        console.log("Participant 2 User ID:", participant2UserId);
+      } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+          toast.error("El correo del Orador 2 no está registrado. Por favor, asegúrate de que el Orador 2 tenga una cuenta.");
+        } else {
+          toast.error("Error al verificar el correo del Orador 2.");
+        }
+        return;
+      }
+
+      // 3. Crear Speaker 1
+      const speaker1Payload = {
+        tournament: tournamentId,
+        user: participant1UserId,
+        province: data.participant1Province,
+        delegation: data.participant1Institution || "Independiente", // Default value for independent
+        is_novice: false, // Adjust as needed
+      };
+      const speaker1 = await api.post(`api/v1/tournaments/${tournamentId}/speakers/`, { json: speaker1Payload }).json<SpeakerResponse>();
+
+      // 4. Crear Speaker 2
+      const speaker2Payload = {
+        tournament: tournamentId,
+        user: participant2UserId,
+        province: data.participant2Province,
+        delegation: data.participant2Institution || "Independiente", // Default value for independent
+        is_novice: false, // Adjust as needed
+      };
+      const speaker2 = await api.post(`api/v1/tournaments/${tournamentId}/speakers/`, { json: speaker2Payload }).json<SpeakerResponse>();
+
+      // 5. Crear Team
+      const teamPayload = {
+        tournament: tournamentId,
+        name: data.teamName,
+        speaker_1: speaker1.id,
+        speaker_2: speaker2.id,
+      };
+      await api.post(`api/v1/tournaments/${tournamentId}/teams/`, { json: teamPayload }).json<TeamResponse>();
+
+      // 6. Registrar al usuario autenticado (Orador 1) en el torneo como participante
+      await api.post(`api/v1/tournaments/${tournamentId}/register/`, { json: { role: "participant" } }).json();
+
+      // 7. Registrar al Orador 2 en el torneo como participante
+      await api.post(`api/v1/tournaments/${tournamentId}/register/`, { json: { user_id: participant2UserId, role: "participant" } }).json();
+
+      updateFormData(data);
+      nextStep();
+    } catch (error) {
+      console.error("Error during team registration:", error);
+      toast.error("Hubo un error durante el registro del equipo. Inténtalo de nuevo.");
+    }
+  };
 
   return (
     <div className="bg-[#ADBC9F] min-h-screen flex flex-col mt-8">
@@ -260,26 +372,14 @@ export default function RegisterTeamPage() {
       <main className="flex-1 flex flex-col items-center justify-start pt-24 px-4">
         <RegistrationForm steps={steps} title="Registro de Equipo">
           {(step, formData, nextStep, prevStep, updateFormData) => {
-            const handleStep1Submit = (
-              type: "independent" | "mixed" | "institutional"
-            ) => {
-              updateFormData({ teamType: type });
-              nextStep();
-            };
-
-            const handleStep2Submit = (data: any) => {
-              updateFormData(data);
-              nextStep();
-            };
-
             if (step === 1) {
-              return <Step1TeamType onSelectTeamType={handleStep1Submit} />;
+              return <Step1TeamType onSelectTeamType={(type: any) => handleStep1Submit(type, updateFormData, nextStep)} />;
             }
             if (step === 2) {
               return (
                 <Step2TeamDetails
                   teamType={formData.teamType}
-                  onSubmit={handleStep2Submit}
+                  onSubmit={(data: any) => handleStep2Submit(data, updateFormData, nextStep)}
                   onBack={prevStep}
                 />
               );
